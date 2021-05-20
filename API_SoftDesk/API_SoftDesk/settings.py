@@ -25,21 +25,27 @@ SECRET_KEY = 'django-insecure-4$&rp015u6+w)f7ahbkmbu5yfcgjsu*ws)7&ns_a+i*-ehoqla
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Djangos std apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'signup.apps.SignupConfig',
-    'login.apps.LoginConfig',
+
+    # Frameworks
+    'rest_framework',
+
+    # Projects apps
     'projects.apps.ProjectsConfig',
+    'signup.apps.SignupConfig',
+    #'login.apps.LoginConfig',
 ]
 
 MIDDLEWARE = [
@@ -102,13 +108,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTIFICATION_CLASSES':{
+        'rest_framework_simplejwt.authentification.JWTAuthentification',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'fr-FR'
+LANGUAGE_CODE = 'en-US'
 
-TIME_ZONE = 'Europe-Paris'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
