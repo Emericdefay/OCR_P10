@@ -93,11 +93,11 @@ class Contributor(models.Model):
         blank=False)
     PERMISSIONS = [("0", False),
                    ("1", True)]
-    permission = models.CharField(
-        max_length=15,
-        choices=PERMISSIONS,
-        null=False,
-        blank=False)
+    # permission = models.CharField(
+    #     max_length=15,
+    #     choices=PERMISSIONS,
+    #     null=False,
+    #     blank=False)
     role = models.CharField(
         max_length=255,
         null=False,

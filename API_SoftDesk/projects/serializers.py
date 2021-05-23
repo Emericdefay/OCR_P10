@@ -19,7 +19,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta():
         model = User
-        fields = "__all__" # Not ALL at final
+        fields = ("username", "first_name", "last_name", "email")
 
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class IssueSerializer(serializers.ModelSerializer):
 class ContributorSerializer(serializers.ModelSerializer):
     class Meta():
         model = Contributor
-        fields = "__all__" # Not ALL at final
+        fields = "__all__"
 
 
 class CommentSerializer(serializers.ModelSerializer):

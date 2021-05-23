@@ -21,10 +21,13 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
+    # Admin part
     path('admin/', admin.site.urls),
+    # Authentication
+    path("signup/", include('signup.urls')),
     path("login/", TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("login/refresh/", TokenRefreshView.as_view(), name='token-refresh'),
+    # API 
     path("projects/", include('projects.urls')),
-    path("signup/", include('signup.urls')),
 ]
 # + static
