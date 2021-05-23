@@ -11,8 +11,8 @@ from . import views
 router = SimpleRouter()
 router.register(r"", views.ProjectCRUD, basename="projects")
 router.register(r"^(?P<id>[^/.])/users", views.UserCRUD, basename="users")
-router.register(r"^(?P<id>[^/.])/issues/", views.IssueCRUD, basename="issues")
-router.register(r"^(?P<id>[^/.])/issues/^(?P<issue_id>[^/.])/comments/", views.CommentCRUD, basename="comments")
+router.register(r"^(?P<id>[^/.])/issues", views.IssueCRUD, basename="issues")
+router.register(r"^(?P<id>[^/.])/issues/^(?P<issue_id>[^/.])/comments", views.CommentCRUD, basename="comments")
 print("------------------URLS--------------")
 for url in router.urls:
     print(f"url : {url}")

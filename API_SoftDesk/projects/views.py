@@ -3,8 +3,7 @@ import json
 
 # Django Libs
 from django.contrib.auth.models import User
-from django.http.response import Http404
-from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 # Other frameworks Libs
 from rest_framework import viewsets
@@ -19,7 +18,9 @@ from .models import (Project,
                      Issue,
                      Comment,
                      Contributor)
-from .permissions import (ElementPermissions)
+from .permissions import (ElementPermissions,
+                          ProjectPermissions,
+                          ContributorPermissions)
 from .serializers import (ProjectSerializer,
                           UserSerializer,
                           ContributorSerializer,
@@ -36,7 +37,7 @@ class ProjectCRUD(viewsets.ViewSet):
     Returns:
         [type]: [description]
     """
-    permission_classes = (ElementPermissions,)
+    permission_classes = (ProjectPermissions,)
 
     def list(self, request):
         """
@@ -64,6 +65,7 @@ class ProjectCRUD(viewsets.ViewSet):
     def retrieve(self, request, pk):
         """
         GET request with specific id
+        Method retrieve
         """
         print(f"method : retrieve")
         # Show one project : id=pk
@@ -80,37 +82,49 @@ class ProjectCRUD(viewsets.ViewSet):
     def create(self, request):
         """ 
         POST request 
-        Create a new projet
+        Method create
+
+        Create a new projet. Need to be connected to create one.
         """
         content = dict(request.data.items())
         if content:
-            stitle = content["title"]
-            sdescription = content["description"]
-            stype = content["type"]
+            # Creation of the projet
             suser = User.objects.get(username=request.user)
-            
-            project = Project(title=stitle, description=sdescription, type=stype, author_user_id=suser)
+            project = Project(author_user_id=suser, **content)
             project.save()
+            # Create a first "contributor": author
+            #id_project = project.id
+            contributor = Contributor(permission="1", role="author", project_id=project, user_id=suser)
+            contributor.save()
+
             return Response(content)
         return Response({"Error": "not valid"})
 
-    def update(self, request, id):
+    def update(self, request, pk):
         """
         PUT request
-        """
-        pass
+        Method update
 
-    def partial_update(self, request, id):
+        Need to own the project to update it.
         """
-        PUT request
-        """
-        pass
+        print("method : update")
+        project_updated = Project.objects.get(id=pk)
+        self.check_object_permissions(request, project_updated)
+        project = Project.objects.filter(id=pk)
+        content = dict(request.data.items())
+        if content:
+            project.update(**content)
+            return Response(content)
+        return Response({"Error": "Couldn't update"})
 
-    def destroy(self, request, id):
+    def destroy(self, request, pk):
         """
         DELETE request
         """
-        pass
+        project_deleted = Project.objects.get(id=pk)
+        self.check_object_permissions(request, project_deleted)
+        #project_deleted.delete() # Comments for developpement
+        return Response({"Success": f"Delete project {pk}"})
 
 
 class UserCRUD(viewsets.ViewSet):
@@ -119,13 +133,18 @@ class UserCRUD(viewsets.ViewSet):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = (ElementPermissions,)
+    permission_classes = (ContributorPermissions,)
 
     def list(self, request, id):
         """
         GET request
+        Method list
         """
-        pass
+        contributors = Contributor.objects.filter(project_id=id)
+        print(contributors)
+        #self.check_object_permissions(request, contributors)
+        serialized_contributors = ContributorSerializer(contributors, many=True)
+        return Response(serialized_contributors.data)
 
     def create(self, request, id):
         """
@@ -134,40 +153,27 @@ class UserCRUD(viewsets.ViewSet):
         content = dict(request.data.items())
         print(f"content USER : {content}")
         if content:
-            #spermission = content["permission"]
-            srole = content["role"]
-            sproject_id = Project.objects.get(id=content["project_id"])
-            suser_id = User.objects.get(id=content["user_id"])
-            
-            contributor = Contributor(role=srole, project_id=sproject_id, user_id=suser_id)
+            contributor = Contributor(project_id=id, **content)
+            self.check_object_permissions(request, contributor) # Contributors' permissions
             contributor.save()
             return Response(content)
         return Response({"Error": "not valid"})
 
-    def retrieve(self, request, id, pk):
-        """
-        POST request
-        """
-        pass
-
-    def update(self, request, id, pk):
-        """
-        POST request
-        """
-        pass
-
-    def partial_update(self, request, id, pk):
-        """
-        POST request
-        """
-        pass
-
     def destroy(self, request, id, pk):
         """
-        DELETE request
+        GET request
         """
-        pass
-
+        try:
+            project = Project.objects.get(id=id)
+            print(f" project : {project}")
+            contributor = Contributor.objects.get(Q(user_id=pk) & Q(project_id=id))
+            serial = ContributorSerializer(contributor)
+            print(f"contributor : {serial.data}")
+        except Exception as e:
+            return Response({f"Error - {e}": f"Couldn't delete {pk} from project {id}"})
+        self.check_object_permissions(request, contributor)
+        #contributor.delete() # Avoid from developpement
+        return Response({"Success": f"Delete Contributor {pk} from project {id}"})
 
 
 class IssueCRUD(viewsets.ViewSet):
