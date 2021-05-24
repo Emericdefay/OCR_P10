@@ -24,7 +24,7 @@
 							"formdata": [
 								{
 									"key": "title",
-									"value": "titrefezfez",
+									"value": "first real project",
 									"description": "\"",
 									"type": "text"
 								},
@@ -131,7 +131,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/2/",
+							"raw": "http://127.0.0.1:8000/projects/12/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -142,6 +142,225 @@
 							"port": "8000",
 							"path": [
 								"projects",
+								"12",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "type",
+									"value": "aaaz",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "dz",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Issue management",
+			"item": [
+				{
+					"name": "list issues from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create issue for project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "problem n1",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "this is a big problem",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "not done yet",
+									"type": "text"
+								},
+								{
+									"key": "assignee_user_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update issue from project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "problem n2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
 								"2",
 								""
 							]
@@ -149,6 +368,47 @@
 					},
 					"response": []
 				},
+				{
+					"name": "delete issue from project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users management",
+			"item": [
 				{
 					"name": "add contributor to project",
 					"request": {
@@ -201,7 +461,151 @@
 					"response": []
 				},
 				{
-					"name": "update project",
+					"name": "delete contributor from project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/3/users/5/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"3",
+								"users",
+								"5",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list contributors from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/3/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"3",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments management",
+			"item": [
+				{
+					"name": "list comments from issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/2/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
+								"2",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create comment for issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "comm",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/12/issues/2/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"12",
+								"issues",
+								"2",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update comment from issue",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -215,19 +619,14 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "type",
-									"value": "aaaz",
-									"type": "text"
-								},
-								{
 									"key": "description",
-									"value": "dz",
+									"value": "update comm",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/1/",
+							"raw": "http://127.0.0.1:8000/projects/3/issues/1/comments/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -238,6 +637,10 @@
 							"port": "8000",
 							"path": [
 								"projects",
+								"3",
+								"issues",
+								"1",
+								"comments",
 								"1",
 								""
 							]
@@ -246,7 +649,7 @@
 					"response": []
 				},
 				{
-					"name": "delete project",
+					"name": "delete comment from issue",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -257,7 +660,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/",
+							"raw": "http://127.0.0.1:8000/projects/3/issues/1/comments/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -268,6 +671,45 @@
 							"port": "8000",
 							"path": [
 								"projects",
+								"3",
+								"issues",
+								"1",
+								"comments",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one comment from issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/3/issues/1/comments/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"3",
+								"issues",
+								"1",
+								"comments",
+								"1",
 								""
 							]
 						}
@@ -275,10 +717,6 @@
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Issue management",
-			"item": []
 		},
 		{
 			"name": "signup a User",
@@ -290,7 +728,7 @@
 					"formdata": [
 						{
 							"key": "first_name",
-							"value": "user1",
+							"value": "user2",
 							"type": "text"
 						},
 						{
@@ -310,7 +748,7 @@
 						},
 						{
 							"key": "username",
-							"value": "user1",
+							"value": "user3",
 							"type": "text"
 						}
 					]
@@ -333,7 +771,7 @@
 			"response": []
 		},
 		{
-			"name": "auth user1",
+			"name": "auth user1 - Author",
 			"event": [
 				{
 					"listen": "test",
@@ -395,7 +833,131 @@
 			"response": []
 		},
 		{
-			"name": "auth ADMIN",
+			"name": "auth user2 - Not contributor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"if (response.access)\r",
+							"{\r",
+							"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+							"\r",
+							"pm.test(\"Status test\", function()\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "user2",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Motdepasse123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth user3 - Contributor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"if (response.access)\r",
+							"{\r",
+							"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+							"\r",
+							"pm.test(\"Status test\", function()\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "user3",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Motdepasse123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth edefay - Admin",
 			"event": [
 				{
 					"listen": "test",

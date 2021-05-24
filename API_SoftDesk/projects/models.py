@@ -41,6 +41,17 @@ class Issue(models.Model):
         max_length=63,
         null=False,
         blank=False)
+    project_id = models.ForeignKey(
+        Project,
+        on_delete=CASCADE,
+        null=False,
+        blank=False
+    )
+    status = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False
+    )
     author_user_id = models.ForeignKey(
         User,
         on_delete=CASCADE,
@@ -59,7 +70,6 @@ class Issue(models.Model):
 
 
 class Comment(models.Model):
-    #comment_id = models.IntegerField()
     description = models.CharField(
         max_length=4095,
         null=False,

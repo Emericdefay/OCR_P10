@@ -1,6 +1,7 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://user.oc-static.com/upload/2020/09/22/16007803099977_P8%20%281%29.png" alt="SoftDesk"></a>
+    <img width=200px height=200px src="https://user.oc-static.com/upload/2020/09/22/16007803099977_P8%20%281%29.png" alt="SoftDesk">
+  </a>
 </p>
 
 <h3 align="center">Create a secured RESTful API using Django REST</h3>
@@ -69,9 +70,10 @@ Add notes about how to use the system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [SQLite3](https://www.sqlite.org/index.html) - Database
-- [Django](https://www.djangoproject.com/) - Website Framework
 - [Python](https://www.python.org/) - Programming language
+- [Django](https://www.djangoproject.com/) - Website Framework
+- [Django REST Framework](https://www.django-rest-framework.org/) - REST Framework for Django
+- [SQLite3](https://www.sqlite.org/index.html) - Database
 
 ## ✍️ Authors <a name = "authors"></a>
 

@@ -7,20 +7,18 @@ from django.db.models import Q
 
 # Other frameworks Libs
 from rest_framework import viewsets
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
-from rest_framework.decorators import action
+from rest_framework import status
 
 # Local packages
 from .models import (Project,
+                     Contributor,
                      Issue,
-                     Comment,
-                     Contributor)
-from .permissions import (ElementPermissions,
-                          ProjectPermissions,
-                          ContributorPermissions)
+                     Comment,)
+from .permissions import (ProjectPermissions,
+                          ContributorPermissions,
+                          IssuePermissions,
+                          CommentPermissions,)
 from .serializers import (ProjectSerializer,
                           UserSerializer,
                           ContributorSerializer,
@@ -29,38 +27,47 @@ from .serializers import (ProjectSerializer,
 
 
 class ProjectCRUD(viewsets.ViewSet):
-    """[summary]
+    """Projects management
 
-    Args:
-        APIView ([type]): [description]
+    Methods:
+        - GET    : list
+        - GET    : retrieve
+        - POST   : create
+        - PUT    : update
+        - DELETE : delete
 
-    Returns:
-        [type]: [description]
+    Permissions:
+
     """
     permission_classes = (ProjectPermissions,)
 
     def list(self, request):
         """
         GET request
-        Show all projects links to the current user
+        Show all projects linked to the current user
         """
         print(f"method : list")
         print(f"id : {request.user.id}")
         # Show all projects
-        list_all_projects = Project.objects.all()
+        projects = Project.objects.all()
         # Show all of them if admin
         if request.user.is_superuser:
-            serialized_list = ProjectSerializer(list_all_projects, many=True)
+            serialized_list = ProjectSerializer(projects,
+                                                many=True)
         # Show user's projects if not admin
         else:
-            projects_from_user = list_all_projects.filter(author_user_id=request.user.id)
-            serialized_list = ProjectSerializer(projects_from_user, many=True)
-        
+            own_projects = projects.filter(author_user_id=request.user.id)
+            serialized_list = ProjectSerializer(own_projects,
+                                                many=True)
+
         if serialized_list.data:
             content = serialized_list.data
+            return Response(data=content,
+                            status=status.is_success)
         else:
-            content = {"Error": "List not valid."}
-        return Response(content)
+            content = {"detail": "No content available."}
+            return Response(data=content,
+                            status=status.HTTP_204_NO_CONTENT)
 
     def retrieve(self, request, pk):
         """
@@ -141,8 +148,6 @@ class UserCRUD(viewsets.ViewSet):
         Method list
         """
         contributors = Contributor.objects.filter(project_id=id)
-        print(contributors)
-        #self.check_object_permissions(request, contributors)
         serialized_contributors = ContributorSerializer(contributors, many=True)
         return Response(serialized_contributors.data)
 
@@ -153,6 +158,8 @@ class UserCRUD(viewsets.ViewSet):
         content = dict(request.data.items())
         print(f"content USER : {content}")
         if content:
+            if Contributor.objects.get(Q(project_id=id) & Q(user_id=content["user_id"])):
+                return Response({"Error":f"User {content['user_id']} is already a contributor for the project {id}"})
             contributor = Contributor(project_id=id, **content)
             self.check_object_permissions(request, contributor) # Contributors' permissions
             contributor.save()
@@ -182,43 +189,74 @@ class IssueCRUD(viewsets.ViewSet):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = (ElementPermissions,)
+    permission_classes = (IssuePermissions,)
 
     def list(self, request, id):
         """
         GET request
         """
-        pass
+        # Check if user is contributor
+        Project.objects.get(id=id)
+        # List issues
+        issues = Issue.objects.filter(project_id=id)
+        serialized_issues = IssueSerializer(issues, many=True)
+        return Response(serialized_issues.data)
 
     def create(self, request, id):
         """
         POST request
         """
-        pass
+        content = dict(request.data.items())
+        if content:
+            # Issue creation
+            data = dict()
+            data["title"] = content["title"]
+            data["desc"] = content["desc"]
+            data["tag"] = content["tag"]
+            data["priority"] = content["priority"]
+            data["project_id"] = Project.objects.get(id=id)
+            data["status"] = content["status"]
+            data["author_user_id"] = User.objects.get(id=request.user.id)
+            data["assignee_user_id"] = User.objects.get(id=content["assignee_user_id"])
+            # 'created_time' is automatically implemented
 
-    def retrieve(self, request, id, pk):
-        """
-        POST request
-        """
-        pass
+            issue = Issue(**data)
+            issue.save()
+
+            return Response({"Success": f"Created Issue {issue} successfully for project {id}"})
+        return Response({"Error": f"Couldn't create Issue for Project {id}"})
 
     def update(self, request, id, pk):
         """
-        POST request
+        PUT request
         """
-        pass
+        # Check permissions issue
+        issue = Issue.objects.get(id=pk)
+        self.check_object_permissions(request, issue)
 
-    def partial_update(self, request, id, pk):
-        """
-        POST request
-        """
-        pass
+        # form data
+        content = dict(request.data.items())
+
+        if content:
+            issue = Issue.objects.filter(id=pk).update(**content)
+            return Response(content)
+        return Response({"Error": f"Couldn't update issue {pk} for project{id}"})
+
 
     def destroy(self, request, id, pk):
         """
         DELETE request
         """
-        pass
+        # Check permissions issue
+        issue = Issue.objects.get(Q(id=pk) & Q(project_id=Project.objects.get(id=id)))
+        self.check_object_permissions(request, issue)
+
+        try:
+            # issue.delete() Disable for developement
+
+            return Response({"Success": f"Successfully delete issue {pk} from project {id}"})
+        except Exception as e:
+            return Response({f"Error - {e}": f"Delete not applied."})
 
 class CommentCRUD(viewsets.ViewSet):
     """[summary]
@@ -226,40 +264,87 @@ class CommentCRUD(viewsets.ViewSet):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = (ElementPermissions,)
+    permission_classes = (CommentPermissions,)
 
     def list(self, request, id, issue_id):
         """
         GET request
         """
-        pass
+        project = Project.objects.get(id=id)
+        issue = Issue.objects.get(id=issue_id)
+        comment = Comment.objects.filter(issue_id__in=issue_id)
+
+        serialized_comment = CommentSerializer(comment, many=True)
+
+        if serialized_comment:
+            return Response(serialized_comment.data)
 
     def create(self, request, id, issue_id):
         """
         POST request
         """
-        pass
+        # is contributor to project
+        project = Project.objects.get(id=id)
+        # issue exist
+        issue = Issue.objects.get(id=issue_id)
+        content = dict(request.data.items())
+        if content:
+            data = dict()
+            data["description"] = content["description"]
+            data["author_user_id"] = User.objects.get(id=request.user.id)
+            data["issue_id"] = Issue.objects.get(id=issue_id)
+            comment = Comment(**data)
+            comment.save()
+            return Response({"Success":f"Comment {comment.id} successfully created"})
+        else:
+            return Response({"Error": f"Couldn't create comment for issue {issue_id} from project {id}"})
 
     def retrieve(self, request, id, issue_id, pk):
         """
-        POST request
+        GET request
         """
-        pass
+        # is contributor to project
+        project = Project.objects.get(id=id)
+        # issue exist
+        issue = Issue.objects.get(id=issue_id)
+        # get comment if exist
+        try:
+            comment = Comment.objects.get(id=pk)
+            self.check_object_permissions(request, comment)
+            serialized_comment = CommentSerializer(comment)
+            return Response(serialized_comment)
+        except Exception as e:
+            return Response({f"Error - {e}": f"Couldn't get the comment {pk} from issue {issue_id} project {id}"})
 
     def update(self, request, id, issue_id, pk):
         """
-        POST request
+        PUT request
         """
-        pass
-
-    def partial_update(self, request, id, issue_id, pk):
-        """
-        POST request
-        """
-        pass
+        # is contributor to project
+        project = Project.objects.get(id=id)
+        # issue exist
+        issue = Issue.objects.get(id=issue_id)
+        # get comment if exist
+        try:
+            comment = Comment.objects.get(id=pk)
+            self.check_object_permissions(request, comment)
+            content = dict(request.data.items())
+            Comment.objects.filter(id=pk).update(content["description"])
+            return Response(content)
+        except Exception as e:
+            return Response({f"Error - {e}": f"Couldn't update comment {pk}"})
 
     def destroy(self, request, id, issue_id, pk):
         """
         DELETE request
         """
-        pass
+        # is contributor to project
+        project = Project.objects.get(id=id)
+        # issue exist
+        issue = Issue.objects.get(id=issue_id)
+        # get comment if exist
+        comment = Comment.objects.get(id=pk)
+        self.check_object_permissions(request, comment)
+        #comment.delete() # Disable for devellopement
+        return Response({"Success": f"Successfully delete comment {pk}"})
+
