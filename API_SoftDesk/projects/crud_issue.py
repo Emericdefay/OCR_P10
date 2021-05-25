@@ -80,6 +80,14 @@ class IssueCRUD(viewsets.ViewSet):
 
         Need to be a contributor of the project to create an issue.
         
+        Form:
+            - title
+            - desc
+            - tag
+            - priority
+            - status
+            - assignee_user_id
+
         Validate :
             (HTTP status_code | detail)
             - 201 : created issue
@@ -111,7 +119,7 @@ class IssueCRUD(viewsets.ViewSet):
                 data["priority"] = content["priority"]
                 data["project_id"] = Project.objects.get(id=id)
                 data["status"] = content["status"]
-                auth_id =User.objects.get(id=request.user.id)
+                auth_id = User.objects.get(id=request.user.id)
                 assignee_id = User.objects.get(
                                     id=content["assignee_user_id"])
                 data["author_user_id"] = auth_id 
@@ -145,6 +153,14 @@ class IssueCRUD(viewsets.ViewSet):
         Method update
 
         Need to own the issue to update it.
+
+        Form:
+            - (title)
+            - (desc)
+            - (tag)
+            - (priority)
+            - (status)
+            - (assignee_user_id)
                 
         Validate :
             (HTTP status_code | detail)

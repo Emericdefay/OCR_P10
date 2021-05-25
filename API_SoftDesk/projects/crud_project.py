@@ -68,7 +68,6 @@ class ProjectCRUD(viewsets.ViewSet):
             contrib_projects = projects.filter(
                 id__in=Contributor.objects.filter(
                     user_id=request.user.id).values_list("project_id"))
-            print(f"list of projects linked : \n{contrib_projects}")
             serialized_list = ProjectSerializer(contrib_projects,
                                                 many=True)
         # Content available
@@ -91,18 +90,17 @@ class ProjectCRUD(viewsets.ViewSet):
 
         Validate :
             (HTTP status_code | detail)
-            - 201 : created project
+            - 200 : retrieved project
         Errors : 
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to create
-            - 500 : Intern error, shouldn't happen
         """
         # Get one project : id=pk
         try:
             project = Project.objects.get(id=pk)
         except Exception:
-            content = {"detail": "Project does not exist."}
+            content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_404_NOT_FOUND)
 
