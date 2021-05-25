@@ -1,6 +1,6 @@
 # Local packages
 from .crud_project import ProjectCRUD
-from .crud_user import UserCRUD
+from .through_user import UserTHROUGH
 from .crud_issue import IssueCRUD
 from .crud_comment import CommentCRUD
 
@@ -10,7 +10,7 @@ class ProjectView(ProjectCRUD):
         pass
 
 
-class UserView(UserCRUD):
+class UserView(UserTHROUGH):
     class Meta:
         pass
 

@@ -6,7 +6,7 @@ from rest_framework.routers import (SimpleRouter,)
 # Local Libs
 from . import views
 from .crud_project import ProjectCRUD
-from .crud_user import UserCRUD
+from .through_user import UserTHROUGH
 from .crud_issue import IssueCRUD
 from .crud_comment import CommentCRUD
 
@@ -14,7 +14,7 @@ from .crud_comment import CommentCRUD
 
 router = SimpleRouter()
 router.register(r"", ProjectCRUD, basename="projects")
-router.register(r"^(?P<id>[^/.]+)/users", UserCRUD, basename="users")
+router.register(r"^(?P<id>[^/.]+)/users", UserTHROUGH, basename="users")
 router.register(r"^(?P<id>[^/.]+)/issues", IssueCRUD, basename="issues")
 router.register(r"^(?P<id>[^/.]+)/issues/(?P<issue_id>[^/.]+)/comments", CommentCRUD, basename="comments")
 print("------------------URLS--------------")

@@ -28,6 +28,10 @@ from .serializers import (ProjectSerializer,
 class IssueCRUD(viewsets.ViewSet):
     """Issue management
 
+    Generic arguments:
+        - id (int) : ID of the project
+        - pk (int) : ID of the issue
+
     Methods:
         - GET    : list
         - POST   : create
@@ -56,62 +60,120 @@ class IssueCRUD(viewsets.ViewSet):
         # Check if user is contributor
         Project.objects.get(id=id)
         # List issues
-        issues = Issue.objects.filter(project_id=id)
+        try:
+            issues = Issue.objects.filter(project_id=id)
+        except Exception:
+            content = {"detail": ""}
+            return Response(data=content,
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         serialized_issues = IssueSerializer(issues, many=True)
-        return Response(serialized_issues.data)
+        return Response(data=serialized_issues.data,
+                        status=status.HTTP_200_OK)
 
     def create(self, request, id):
         """
         POST request
+        Method create
+
+        Need to be a contributor of the project to create an issue.
         """
-        content = dict(request.data.items())
+        # Check if user is contributor
+        Project.objects.get(id=id)
+        # Check if form is valid
+        try:
+            content = dict(request.data.items())
+        except Exception:
+            content = {"detail": "Invalid form."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         if content:
             # Issue creation
-            data = dict()
-            data["title"] = content["title"]
-            data["desc"] = content["desc"]
-            data["tag"] = content["tag"]
-            data["priority"] = content["priority"]
-            data["project_id"] = Project.objects.get(id=id)
-            data["status"] = content["status"]
-            data["author_user_id"] = User.objects.get(id=request.user.id)
-            data["assignee_user_id"] = User.objects.get(id=content["assignee_user_id"])
-            # 'created_time' is automatically implemented
-
-            issue = Issue(**data)
+            try:
+                data = dict()
+                data["title"] = content["title"]
+                data["desc"] = content["desc"]
+                data["tag"] = content["tag"]
+                data["priority"] = content["priority"]
+                data["project_id"] = Project.objects.get(id=id)
+                data["status"] = content["status"]
+                data["author_user_id"] = User.objects.get(id=request.user.id)
+                data["assignee_user_id"] = User.objects.get(id=content["assignee_user_id"])
+                # 'created_time' is automatically implemented
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+            # Check if data is valid
+            try:
+                issue = Issue(**data)
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+            # Saving process
             issue.save()
-
-            return Response({"Success": f"Created Issue {issue} successfully for project {id}"})
-        return Response({"detail": f"Couldn't create Issue for Project {id}"})
+            # Serialize issue
+            serialized_issue = IssueSerializer(issue, many=True)
+            return Response(data=serialized_issue.data,
+                            status=status.HTTP_200_OK)
+        else:
+            content = {"detail": f"Couldn't create Issue for Project {id}."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, id, pk):
         """
         PUT request
+        Method update
+
+        Need to own the issue to update it.
         """
         # Check permissions issue
         issue = Issue.objects.get(id=pk)
         self.check_object_permissions(request, issue)
-
-        # form data
-        content = dict(request.data.items())
-
+        # Check if content is a valid form
+        try:
+            content = dict(request.data.items())
+        except Exception:
+            content = {"detail": "Invalid form."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if content is not empty
         if content:
-            issue = Issue.objects.filter(id=pk).update(**content)
-            return Response(content)
-        return Response({"detail": f"Couldn't update issue {pk} for project{id}"})
+            # Check if content is valid
+            try:
+                issue = Issue.objects.filter(id=pk).update(**content)
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+            serialized_issue = IssueSerializer(issue, many=True)
+            return Response(data=serialized_issue.data,
+                            status=status.HTTP_200_OK)
+        else:
+            content = {"detail": f"Couldn't update issue {pk} for project{id}."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
     def destroy(self, request, id, pk):
         """
         DELETE request
+        Method destroy
+
+        Need to own issue to delete it.
         """
         # Check permissions issue
         issue = Issue.objects.get(Q(id=pk) & Q(project_id=Project.objects.get(id=id)))
         self.check_object_permissions(request, issue)
-
         try:
-            # issue.delete() Disable for developement
-
-            return Response({"Success": f"Successfully delete issue {pk} from project {id}"})
-        except Exception as e:
-            return Response({f"detail - {e}": f"Delete not applied."})
+            issue.delete()
+            content = {"detail": f"Successfully delete issue {pk} from project {id}.",
+                       "project_id": id,
+                       "issue_id": pk}
+            return Response(data=content,
+                            status=status.HTTP_200_OK)
+        except Exception:
+            content = {"detail": "Delete not applied."}
+            return Response(data=content,
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)

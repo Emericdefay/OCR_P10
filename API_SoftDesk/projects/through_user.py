@@ -26,6 +26,10 @@ class UserTHROUGH(viewsets.ViewSet):
         
         model table : through
 
+    Generic arguments:
+        - id (int) : ID of the project
+        - pk (int) : ID of the contributor
+
     Methods:
         - GET    : list
         - POST   : create
@@ -46,11 +50,15 @@ class UserTHROUGH(viewsets.ViewSet):
         """
         GET request
         Method list
+
+        List all contributor for the project.
+        Need to be one of them to get the list.
         """
+        # Should always get one contributor : the author.
         try:
             contributors = Contributor.objects.filter(project_id=id)
         except Exception:
-            content = {"detail": "No contributor for project {id}"}
+            content = {"detail": "No contributor for project {id}."}
             return Response(data=content,
                             status=status.HTTP_204_NO_CONTENT)
         serialized_contributors = ContributorSerializer(contributors, many=True)
@@ -63,6 +71,7 @@ class UserTHROUGH(viewsets.ViewSet):
         Method create
 
         Add a contributor to the project that user own.
+        Need to be the author to add a contributor.
         """
         try:
             content = dict(request.data.items())
@@ -99,6 +108,13 @@ class UserTHROUGH(viewsets.ViewSet):
         Need to own the project to delete contibutors. 
         Cannot delete the owner from contributors
         """
+        # Check if author try to delete him self from contrib's list.
+        if pk == request.user.id:
+            content = {"detail": "You cannot delete yourself from the \
+                                  contributor list."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
+        # Check if user has right to destroy a contributor.
         try:
             project = Project.objects.get(id=id)
         except Exception:
@@ -106,21 +122,21 @@ class UserTHROUGH(viewsets.ViewSet):
                         or you don't have the right to manipulate it."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
+        # Check if the delete request really concern a project's contributor.
         try:
             contributor = Contributor.objects.get(Q(user_id=pk) & Q(project_id=id))
         except Exception:
             content = {"detail": f"User {pk} is not a contributor for projet {id}."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
-
+        # Check if the user targetted has same right that the author.
         if contributor["permission"] == 1:
-            content = {"detail": "You cannot be deleted from contributors. \
-                        You own it."}
+            content = {"detail": "You cannot delete a contributor that own it too."}
             return Response(data=content,
                             status=status.HTTP_401_UNAUTHORIZED)
-                            
         # Check if user has permission to delete contributor.
         self.check_object_permissions(request, contributor)
+        # Delete process.
         contributor.delete()
         content = {"detail": f"Contributor {pk} deleted from project {id}.",
                    "project_id": id,

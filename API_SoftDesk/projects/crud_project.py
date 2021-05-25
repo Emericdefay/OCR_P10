@@ -22,6 +22,9 @@ from .serializers import (ProjectSerializer,)
 class ProjectCRUD(viewsets.ViewSet):
     """Projects management
 
+    Generic argument:
+        - pk (int) : ID of the project
+
     Methods:
         - GET    : list
         - GET    : retrieve
@@ -52,11 +55,11 @@ class ProjectCRUD(viewsets.ViewSet):
         """
         # Show all projects
         projects = Project.objects.all()
-        # Show all of them if admin
+        # Select them all if admin
         if request.user.is_superuser:
             serialized_list = ProjectSerializer(projects,
                                                 many=True)
-        # Show user's projects if not admin
+        # Select user's projects if not admin
         else:
             own_projects = projects.filter(author_user_id=request.user.id)
             contrib_projects = projects.filter(id__in=Contributor.objects.filter(user_id=request.user.id).values_list("id"))
@@ -76,7 +79,7 @@ class ProjectCRUD(viewsets.ViewSet):
 
     def retrieve(self, request, pk):
         """
-        GET request with specific id
+        GET request
         Method retrieve
 
         Get a specific project for the authenticated user.

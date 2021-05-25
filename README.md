@@ -17,54 +17,58 @@
 
 ---
 
-<p align="center"> Few lines describing the project.
+<p align="center"> RESTful API
     <br> 
 </p>
 
 ## 📝 Table of Contents
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [Authors](#authors)
+- [📝 Table of Contents](#-table-of-contents)
+- [About <a name="about"></a>](#about-)
+- [🏁 Getting Started <a name="getting_started"></a>](#-getting-started-)
+  - [Prerequisites](#prerequisites)
+  - [Installing](#installing)
+- [🎈 Usage <a name = "usage"></a>](#-usage-)
+- [⛏️ Built Using <a name = "built_using"></a>](#️-built-using-)
+- [Recommandations <a name = "recommandations"></a>](#recommandations-)
+- [✍️ Authors <a name = "authors"></a>](#️-authors-)
 
-## About <a name = "about"></a>
+---
 
-Write about 1-2 paragraphs describing the purpose of the project.
+## About <a name="about"></a>
 
-## 🏁 Getting Started <a name = "getting_started"></a>
+<p>
+This project provide a RESTful API localy.<br>
+Allow developper to create the front-end on Android, IOS & computer.
+</p>
 
-instructions pres
+## 🏁 Getting Started <a name="getting_started"></a>
+
+Those instructions will bring you the API at the url : `http://127.0.0.1:8000/`. <br>
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
-
-```
-Give examples
-```
+<p>Before started to setup the RESTful API, you need to get : </p>
+<ul>
+  <li>Python >= 3.6</li>
+  <li>Postman</li>
+  <li>Git</li>
+</ul>
+<p>It will provide you tools to extract, run and detail the API.</p>
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+- Create a folder
+- Clone the project `git clone` inside the folder
+- Go to root `cd OCR_P10`
+- Create environment named env `python -m venv env`
+- Start the environment `env\Scripts\activate.bat`
+- Install requirements `pip install -r requirements.txt`
+- Run server `python API_SoftDesk/manage.py runserver`
+- Go to url : `http://127.0.0.1:8000/`
 
-Say what the step will be
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🎈 Usage <a name="usage"></a>
+## 🎈 Usage <a name = "usage"></a>
 
 Add notes about how to use the system.
 
@@ -74,6 +78,10 @@ Add notes about how to use the system.
 - [Django](https://www.djangoproject.com/) - Website Framework
 - [Django REST Framework](https://www.django-rest-framework.org/) - REST Framework for Django
 - [SQLite3](https://www.sqlite.org/index.html) - Database
+
+## Recommandations <a name = "recommandations"></a>
+
+- [Postman](https://www.postman.com/) - API Development
 
 ## ✍️ Authors <a name = "authors"></a>
 

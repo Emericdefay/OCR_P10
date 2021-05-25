@@ -26,7 +26,12 @@ from .serializers import (ProjectSerializer,
 
 
 class CommentCRUD(viewsets.ViewSet):
-    """[summary]
+    """Comment management
+
+    Generic arguments:
+        - id (int)       : ID of the project
+        - issue_id (int) : ID of the issue
+        - pk (int)       : ID of the comment
 
     Methods:
         - GET    : list
@@ -52,56 +57,105 @@ class CommentCRUD(viewsets.ViewSet):
     def list(self, request, id, issue_id):
         """
         GET request
+        Method list
+
+        Need to be a contributor to list comments.
         """
-        project = Project.objects.get(id=id)
-        issue = Issue.objects.get(id=issue_id)
+        # Check if user is contributor
+        Project.objects.get(id=id)
+        # Check if issue exists
+        Issue.objects.get(id=issue_id)
+
         comment = Comment.objects.filter(issue_id__in=issue_id)
-
         serialized_comment = CommentSerializer(comment, many=True)
-
-        if serialized_comment:
-            return Response(serialized_comment.data)
+        # Check if comments exist
+        if comment:
+            return Response(data=serialized_comment.data,
+                                status=status.HTTP_200_OK)
+        else:
+            # Return an empty json : []
+            return Response(data=serialized_comment.data,
+                            status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, id, issue_id):
         """
         POST request
+        Method create
+
+        Need to be a contributor to the project
+        to create a comment on a existing issue.
         """
-        # is contributor to project
-        project = Project.objects.get(id=id)
-        # issue exist
-        issue = Issue.objects.get(id=issue_id)
-        content = dict(request.data.items())
+        # Check if contributor to project
+        Project.objects.get(id=id)
+        # Check if issue exist
+        Issue.objects.get(id=issue_id)
+        # Check if content is valid
+        try:
+            content = dict(request.data.items())
+        except Exception:
+            content = {"detail": "Invalid form."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if content is not empty
         if content:
-            data = dict()
-            data["description"] = content["description"]
-            data["author_user_id"] = User.objects.get(id=request.user.id)
-            data["issue_id"] = Issue.objects.get(id=issue_id)
-            comment = Comment(**data)
+            # Check if content is valid
+            try:
+                data = dict()
+                data["description"] = content["description"]
+                data["author_user_id"] = User.objects.get(id=request.user.id)
+                data["issue_id"] = Issue.objects.get(id=issue_id)
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+            # Check if content is conform
+            try:
+                comment = Comment(**data)
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
             comment.save()
-            return Response({"Success":f"Comment {comment.id} successfully created"})
+
+            serialized_comment = CommentSerializer(comment)
+            return Response(data=serialized_comment.data,
+                            status=status.HTTP_201_CREATED)
         else:
-            return Response({"detail": f"Couldn't create comment for issue {issue_id} from project {id}"})
+            content = {"detail": "Form is empty."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, id, issue_id, pk):
         """
         GET request
+        Method retrieve
+
+        Need to be a contributor to get a comment.
         """
         # is contributor to project
-        project = Project.objects.get(id=id)
+        Project.objects.get(id=id)
         # issue exist
-        issue = Issue.objects.get(id=issue_id)
+        Issue.objects.get(id=issue_id)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
-            self.check_object_permissions(request, comment)
-            serialized_comment = CommentSerializer(comment)
-            return Response(serialized_comment)
-        except Exception as e:
-            return Response({f"detail - {e}": f"Couldn't get the comment {pk} from issue {issue_id} project {id}"})
+        except Exception:
+            content = {"detail": f"Couldn't get the comment {pk}."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if user has right to retrieve this comment.    
+        self.check_object_permissions(request, comment)
+
+        serialized_comment = CommentSerializer(comment)
+        return Response(data=serialized_comment.data,
+                        status=status.HTTP_200_OK)
 
     def update(self, request, id, issue_id, pk):
         """
         PUT request
+        Method update
+
+        Need to own the comment to update it.
         """
         # is contributor to project
         project = Project.objects.get(id=id)
@@ -110,24 +164,69 @@ class CommentCRUD(viewsets.ViewSet):
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
-            self.check_object_permissions(request, comment)
+        except Exception:
+            content = {"detail":"Cannot access this comment."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
+        # Check if user has permission to update it
+        self.check_object_permissions(request, comment)
+        # Check if content is valid
+        try:
             content = dict(request.data.items())
-            Comment.objects.filter(id=pk).update(content["description"])
-            return Response(content)
-        except Exception as e:
-            return Response({f"detail - {e}": f"Couldn't update comment {pk}"})
+        except Exception:
+            content = {"detail": "Invalid form."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if content is not empty
+        if content:
+            # Check if comment exist
+            try:
+                comment = Comment.objects.filter(id=pk)
+            except Exception:
+                content = {"detail": "Comment does not exist."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+            # Check if form is valid
+            try:
+                comment.update(content["description"])
+            except Exception:
+                content = {"detail": f"Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
+
+            serialized_comment = CommentSerializer(comment, many=True)
+            return Response(data=serialized_comment.data,
+                            status=status.HTTP_200_OK)
+        else:
+            content = {"detail": "Empty form."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, id, issue_id, pk):
         """
         DELETE request
+        Method destroy
+
+        Need to own the comment to destroy it.
         """
         # is contributor to project
-        project = Project.objects.get(id=id)
+        Project.objects.get(id=id)
         # issue exist
-        issue = Issue.objects.get(id=issue_id)
+        Issue.objects.get(id=issue_id)
         # get comment if exist
-        comment = Comment.objects.get(id=pk)
+        try:
+            comment = Comment.objects.get(id=pk)
+        except Exception:
+            content = {"detail": "Couldn't get the comment."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
         self.check_object_permissions(request, comment)
-        #comment.delete() # Disable for devellopement
-        return Response({"Success": f"Successfully delete comment {pk}"})
+        # Delete process
+        comment.delete()
+        content = {"detail": f"Successfully delete comment {pk}.",
+                   "project_id": id,
+                   "issue_id": issue_id,
+                   "comment_id": pk}
+        return Response(data=content,
+                        status=status.HTTP_200_OK)
 
