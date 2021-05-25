@@ -1,9 +1,6 @@
-# Std. Libs
-import json
-
 # Django Libs
 from django.contrib.auth.models import User
-from django.db.models import Q
+# from django.db.models import Q
 
 # Other frameworks Libs
 from rest_framework import viewsets
@@ -12,17 +9,10 @@ from rest_framework import status
 
 # Local packages
 from .models import (Project,
-                     Contributor,
                      Issue,
                      Comment,)
-from .permissions import (ProjectPermissions,
-                          ContributorPermissions,
-                          IssuePermissions,
-                          CommentPermissions,)
-from .serializers import (ProjectSerializer,
-                          ContributorSerializer,
-                          IssueSerializer,
-                          CommentSerializer)
+from .permissions import (CommentPermissions,)
+from .serializers import (CommentSerializer)
 
 
 class CommentCRUD(viewsets.ViewSet):
@@ -40,7 +30,7 @@ class CommentCRUD(viewsets.ViewSet):
         - PUT    : update
         - DELETE : delete
 
-    Permissions:
+    Permissions:    
         Contributor :
             - list
             - retrieve
@@ -60,13 +50,32 @@ class CommentCRUD(viewsets.ViewSet):
         Method list
 
         Need to be a contributor to list comments.
-        """
-        # Check if user is contributor
-        Project.objects.get(id=id)
-        # Check if issue exists
-        Issue.objects.get(id=issue_id)
 
-        comment = Comment.objects.filter(issue_id__in=issue_id)
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : comments' list
+            - 204 : No comment
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to list
+        """
+        # Check if project exist
+        try:
+            # Check if user is contributor
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if issue exists
+        try:
+            Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        comment = Comment.objects.filter(issue_id=issue_id)
         serialized_comment = CommentSerializer(comment, many=True)
         # Check if comments exist
         if comment:
@@ -84,11 +93,33 @@ class CommentCRUD(viewsets.ViewSet):
 
         Need to be a contributor to the project
         to create a comment on a existing issue.
+
+        Form :
+            - description
+
+        Validate :
+            (HTTP status_code | detail)
+            - 201 : created comment
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to create
         """
-        # Check if contributor to project
-        Project.objects.get(id=id)
+        # Check if project exist
+        try:
+            # Check if contributor to project
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check if issue exist
-        Issue.objects.get(id=issue_id)
+        try:
+            Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check if content is valid
         try:
             content = dict(request.data.items())
@@ -102,7 +133,8 @@ class CommentCRUD(viewsets.ViewSet):
             try:
                 data = dict()
                 data["description"] = content["description"]
-                data["author_user_id"] = User.objects.get(id=request.user.id)
+                user_id = User.objects.get(id=request.user.id)
+                data["author_user_id"] = user_id
                 data["issue_id"] = Issue.objects.get(id=issue_id)
             except Exception:
                 content = {"detail": "Invalid form."}
@@ -131,18 +163,41 @@ class CommentCRUD(viewsets.ViewSet):
         Method retrieve
 
         Need to be a contributor to get a comment.
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : data retrieve
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist
+            - 403 : Not permission to retrieve
         """
-        # is contributor to project
-        Project.objects.get(id=id)
+        # Project exist
+        try:
+            # is contributor to project
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)        
         # issue exist
-        Issue.objects.get(id=issue_id)
+        try:
+            Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            content = {"detail": "Comment doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             content = {"detail": f"Couldn't get the comment {pk}."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_403_FORBIDDEN)
         # Check if user has right to retrieve this comment.    
         self.check_object_permissions(request, comment)
 
@@ -156,14 +211,39 @@ class CommentCRUD(viewsets.ViewSet):
         Method update
 
         Need to own the comment to update it.
+
+        Form :
+            - description
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : data updated
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | invalid form
+            - 403 : Not permission to update
         """
-        # is contributor to project
-        project = Project.objects.get(id=id)
-        # issue exist
-        issue = Issue.objects.get(id=issue_id)
+        try:
+            # is contributor to project
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # issue exist
+            Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            content = {"detail": "Comment doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)           
         except Exception:
             content = {"detail":"Cannot access this comment."}
             return Response(data=content,
@@ -208,16 +288,43 @@ class CommentCRUD(viewsets.ViewSet):
         Method destroy
 
         Need to own the comment to destroy it.
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : Successfully delete comment
+                    project_id
+                    issue_id
+                    comment_id
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist
+            - 403 : Not permission to delete
         """
-        # is contributor to project
-        Project.objects.get(id=id)
-        # issue exist
-        Issue.objects.get(id=issue_id)
+        # Check if project exists
+        try:
+            # is contributor to project
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content={"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # issue exist
+            Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            content={"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            content={"detail": "Comment doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            content = {"detail": "Couldn't get the comment."}
+            content = {"detail": "You don't have permission to " \
+                                 "delete this comment."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
         self.check_object_permissions(request, comment)

@@ -1,6 +1,3 @@
-# Std. Libs
-import json
-
 # Django Libs
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -12,17 +9,9 @@ from rest_framework import status
 
 # Local packages
 from .models import (Project,
-                     Contributor,
-                     Issue,
-                     Comment,)
-from .permissions import (ProjectPermissions,
-                          ContributorPermissions,
-                          IssuePermissions,
-                          CommentPermissions,)
-from .serializers import (ProjectSerializer,
-                          ContributorSerializer,
-                          IssueSerializer,
-                          CommentSerializer)
+                     Issue,)
+from .permissions import (IssuePermissions,)
+from .serializers import (IssueSerializer,)
 
 
 class IssueCRUD(viewsets.ViewSet):
@@ -56,16 +45,30 @@ class IssueCRUD(viewsets.ViewSet):
         Method list
 
         List all issues from a project if user is a contributor
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : issue's list
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist
+            - 403 : Not permission to list
         """
-        # Check if user is contributor
-        Project.objects.get(id=id)
+        # Check if project exist
+        try:
+            # Check if user is contributor
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # List issues
         try:
             issues = Issue.objects.filter(project_id=id)
-        except Exception:
-            content = {"detail": ""}
+        except Exception as e:
+            content = {"detail": f"{e}"}
             return Response(data=content,
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                        status=status.HTTP_400_BAD_REQUEST)
         serialized_issues = IssueSerializer(issues, many=True)
         return Response(data=serialized_issues.data,
                         status=status.HTTP_200_OK)
@@ -76,9 +79,21 @@ class IssueCRUD(viewsets.ViewSet):
         Method create
 
         Need to be a contributor of the project to create an issue.
+        
+        Validate :
+            (HTTP status_code | detail)
+            - 201 : created issue
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to create
         """
-        # Check if user is contributor
-        Project.objects.get(id=id)
+        # Check if project exist
+        try:
+            # Check if user is contributor
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
         # Check if form is valid
         try:
             content = dict(request.data.items())
@@ -96,8 +111,11 @@ class IssueCRUD(viewsets.ViewSet):
                 data["priority"] = content["priority"]
                 data["project_id"] = Project.objects.get(id=id)
                 data["status"] = content["status"]
-                data["author_user_id"] = User.objects.get(id=request.user.id)
-                data["assignee_user_id"] = User.objects.get(id=content["assignee_user_id"])
+                auth_id =User.objects.get(id=request.user.id)
+                assignee_id = User.objects.get(
+                                    id=content["assignee_user_id"])
+                data["author_user_id"] = auth_id 
+                data["assignee_user_id"] = assignee_id
                 # 'created_time' is automatically implemented
             except Exception:
                 content = {"detail": "Invalid form."}
@@ -115,9 +133,9 @@ class IssueCRUD(viewsets.ViewSet):
             # Serialize issue
             serialized_issue = IssueSerializer(issue, many=True)
             return Response(data=serialized_issue.data,
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_201_CREATED)
         else:
-            content = {"detail": f"Couldn't create Issue for Project {id}."}
+            content = {"detail": "Empty form."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -127,9 +145,31 @@ class IssueCRUD(viewsets.ViewSet):
         Method update
 
         Need to own the issue to update it.
+                
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : updated issue
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to update
         """
+        # Check if project exist
+        try:
+            # is contributor
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if issue exist
+        try:
+            issue = Issue.objects.get(id=pk)
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check permissions issue
-        issue = Issue.objects.get(id=pk)
         self.check_object_permissions(request, issue)
         # Check if content is a valid form
         try:
@@ -151,10 +191,9 @@ class IssueCRUD(viewsets.ViewSet):
             return Response(data=serialized_issue.data,
                             status=status.HTTP_200_OK)
         else:
-            content = {"detail": f"Couldn't update issue {pk} for project{id}."}
+            content = {"detail": "Empty form."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
-
 
     def destroy(self, request, id, pk):
         """
@@ -162,13 +201,40 @@ class IssueCRUD(viewsets.ViewSet):
         Method destroy
 
         Need to own issue to delete it.
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : delete details
+                    project_id
+                    issue_id
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist
+            - 403 : Not permission to delete
+            - 500 : Delete failed
         """
+        # Check if project exist
+        try:
+            # is contributor
+            Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if issue exist
+        try:
+            issue = Issue.objects.get(
+                Q(id=pk) & 
+                Q(project_id=Project.objects.get(id=id)))
+        except Issue.DoesNotExist:
+            content = {"detail": "Issue doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check permissions issue
-        issue = Issue.objects.get(Q(id=pk) & Q(project_id=Project.objects.get(id=id)))
         self.check_object_permissions(request, issue)
         try:
             issue.delete()
-            content = {"detail": f"Successfully delete issue {pk} from project {id}.",
+            content = {"detail": f"Successfully delete issue {pk}.",
                        "project_id": id,
                        "issue_id": pk}
             return Response(data=content,
@@ -176,4 +242,4 @@ class IssueCRUD(viewsets.ViewSet):
         except Exception:
             content = {"detail": "Delete not applied."}
             return Response(data=content,
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)

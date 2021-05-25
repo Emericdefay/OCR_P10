@@ -1,9 +1,6 @@
-# Std. Libs
-import json
-
 # Django Libs
 from django.contrib.auth.models import User
-from django.db.models import Q
+# from django.db.models import Q
 
 # Other frameworks Libs
 from rest_framework import viewsets
@@ -12,9 +9,7 @@ from rest_framework import status
 
 # Local packages
 from .models import (Project,
-                     Contributor,
-                     Issue,
-                     Comment,)
+                     Contributor,)
 from .permissions import (ProjectPermissions,)
 from .serializers import (ProjectSerializer,)
 
@@ -52,6 +47,15 @@ class ProjectCRUD(viewsets.ViewSet):
         Method list
 
         Show all projects linked to the authenticated user
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : projects' list
+            - 204 : No project
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to list
         """
         # Show all projects
         projects = Project.objects.all()
@@ -61,8 +65,9 @@ class ProjectCRUD(viewsets.ViewSet):
                                                 many=True)
         # Select user's projects if not admin
         else:
-            own_projects = projects.filter(author_user_id=request.user.id)
-            contrib_projects = projects.filter(id__in=Contributor.objects.filter(user_id=request.user.id).values_list("id"))
+            contrib_projects = projects.filter(
+                id__in=Contributor.objects.filter(
+                    user_id=request.user.id).values_list("project_id"))
             print(f"list of projects linked : \n{contrib_projects}")
             serialized_list = ProjectSerializer(contrib_projects,
                                                 many=True)
@@ -73,7 +78,7 @@ class ProjectCRUD(viewsets.ViewSet):
                             status=status.HTTP_200_OK)
         # Content not available
         else:
-            content = {"detail": "No content available."}
+            content = {"detail": "No project available."}
             return Response(data=content,
                             status=status.HTTP_204_NO_CONTENT)
 
@@ -83,6 +88,15 @@ class ProjectCRUD(viewsets.ViewSet):
         Method retrieve
 
         Get a specific project for the authenticated user.
+
+        Validate :
+            (HTTP status_code | detail)
+            - 201 : created project
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to create
+            - 500 : Intern error, shouldn't happen
         """
         # Get one project : id=pk
         try:
@@ -102,7 +116,7 @@ class ProjectCRUD(viewsets.ViewSet):
         else:
             content = {"detail": "Project details not available."}
             return Response(content,
-                            status=status.HTTP_404_NOT_FOUND)
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         """ 
@@ -110,38 +124,60 @@ class ProjectCRUD(viewsets.ViewSet):
         Method create
 
         Create a new projet. Need to be connected to create one.
+
+        Form:
+            - title
+            - description
+            - type
+
+        Validate :
+            (HTTP status_code | detail)
+            - 201 : created project
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to create
+            - 500 : Intern error, shouldn't happen
         """
         try:
             content = dict(request.data.items())
         except Exception:
             content = {"detail": "Form is invalid."}
             return Response(data=content,
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+                            status=status.HTTP_400_BAD_REQUEST)
         if content:
             # Creation of the projet
-            suser = User.objects.get(username=request.user)
+            suser = User.objects.get(id=request.user.id)
             try:
-                project = Project(author_user_id=suser, **content)
+                content["author_user_id"] = suser
+                project = Project(**content)
             except Exception:
                 content = {"detail": "Invalid keys in form."}
                 return Response(data=content,
-                                status=status.HTTP_406_NOT_ACCEPTABLE)
-            project.save()
+                                status=status.HTTP_400_BAD_REQUEST)
             # Create the first "contributor": author
-            contributor = Contributor(permission="1",
-                                      role="author",
-                                      project_id=project,
-                                      user_id=suser)
+            try:
+                contrib_attrib = dict()
+                contrib_attrib["permission"] = "1"
+                contrib_attrib["author"] = "author"
+                contrib_attrib["project_id"] = project
+                contrib_attrib["user_id"] = suser 
+                contributor = Contributor(**contrib_attrib)
+            except Exception:
+                content={"detail": "Intern error"}
+                return Response(data=content,
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Saving process
+            project.save()
             contributor.save()
 
             serialized_project = ProjectSerializer(project)
-            
             return Response(data=serialized_project.data,
                             status=status.HTTP_201_CREATED)
         else:
             content = {"detail": "Form is empty."}
             return Response(data=content,
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk):
         """
@@ -149,14 +185,28 @@ class ProjectCRUD(viewsets.ViewSet):
         Method update
 
         Need to own the project to update it.
+
+        Form:
+            - (title)
+            - (description)
+            - (type)
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : updated project
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist | Invalid form
+            - 403 : Not permission to update
         """
-        print("method : update")
+        # Check if project exists
         try:
+            # Check permission
             project_updated = Project.objects.get(id=pk)
-        except Exception:
-            content = {"detail":"Project not found."}
+        except Project.DoesNotExist:
+            content = {"detail":"Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_404_NOT_FOUND)
+                            status=status.HTTP_400_BAD_REQUEST)
         # check if user has permission to update this project
         self.check_object_permissions(request, project_updated)
         project = Project.objects.filter(id=pk)
@@ -165,16 +215,21 @@ class ProjectCRUD(viewsets.ViewSet):
         except Exception:
             content = {"detail":"Form is invalid."}
             return Response(data=content,
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+                            status=status.HTTP_400_BAD_REQUEST)
         if content:
-            project.update(**content)
+            try:
+                project.update(**content)
+            except Exception:
+                content = {"detail": "Invalid form."}
+                return Response(data=content,
+                                status=status.HTTP_400_BAD_REQUEST)
             serialized_project = ProjectSerializer(project, many=True)
             return Response(data=serialized_project.data,
                             status=status.HTTP_200_OK)
         else:
-            content = {"detail": "PUT form is empty."}
+            content = {"detail": "Empty form."}
             return Response(data=content,
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk):
         """
@@ -182,21 +237,33 @@ class ProjectCRUD(viewsets.ViewSet):
         Method destroy
 
         Need to own the project to delete it.
+
+        Validate :
+            (HTTP status_code | detail)
+            - 200 : project deleted
+                    project_id
+        Errors : 
+            (HTTP status_code | detail)
+            - 400 : Element doesn't exist
+            - 403 : Not permission to delete
+            - 417 : Expectation failed
         """
+        # Check if project exists
         try:
+            # Is contributor
             project_deleted = Project.objects.get(id=pk)
         except Exception:
-            content = {"detail": "Project does not exist."}
+            content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_404_NOT_FOUND)
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check if user has permission to delete the project
         self.check_object_permissions(request, project_deleted)
         try:
             project_deleted.delete() # Comments for developpement
             content = {"detail": f"Project {pk} deleted.",
-                       "project_id": pk,}
+                       "project_id": pk}
             return Response(data=content,
-                            status=status.HTTP_204_NO_CONTENT)
+                            status=status.HTTP_200_OK)
         except Exception:
             content = {"detail": "Could not delete the project."}
             return Response(data=content,
