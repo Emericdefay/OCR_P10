@@ -26,16 +26,16 @@ class Signup(APIView):
         Validate :
             (HTTP status_code | detail)
             - 200 : user created
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Invalid form
         """
-        
+
         content = request.data
         # Check if data is not empty
         if content:
             try:
-                data =dict()
+                data = dict()
                 data["username"] = content["username"]
                 data["first_name"] = content["first_name"]
                 data["last_name"] = content["last_name"]

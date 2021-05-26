@@ -30,7 +30,7 @@ class CommentCRUD(viewsets.ViewSet):
         - PUT    : update
         - DELETE : delete
 
-    Permissions:    
+    Permissions:
         Contributor :
             - list
             - retrieve
@@ -55,7 +55,7 @@ class CommentCRUD(viewsets.ViewSet):
             (HTTP status_code | detail)
             - 200 : comments' list
             - 204 : No comment
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to list
@@ -80,7 +80,7 @@ class CommentCRUD(viewsets.ViewSet):
         # Check if comments exist
         if comment:
             return Response(data=serialized_comment.data,
-                                status=status.HTTP_200_OK)
+                            status=status.HTTP_200_OK)
         else:
             # Return an empty json : []
             return Response(data=serialized_comment.data,
@@ -100,7 +100,7 @@ class CommentCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 201 : created comment
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to create
@@ -167,7 +167,7 @@ class CommentCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : data retrieve
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to retrieve
@@ -179,7 +179,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)        
+                            status=status.HTTP_400_BAD_REQUEST)
         # issue exist
         try:
             Issue.objects.get(id=issue_id)
@@ -198,7 +198,7 @@ class CommentCRUD(viewsets.ViewSet):
             content = {"detail": f"Couldn't get the comment {pk}."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
-        # Check if user has right to retrieve this comment.    
+        # Check if user has right to retrieve this comment.
         self.check_object_permissions(request, comment)
 
         serialized_comment = CommentSerializer(comment)
@@ -218,7 +218,7 @@ class CommentCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : data updated
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | invalid form
             - 403 : Not permission to update
@@ -243,9 +243,9 @@ class CommentCRUD(viewsets.ViewSet):
         except Comment.DoesNotExist:
             content = {"detail": "Comment doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)           
+                            status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            content = {"detail":"Cannot access this comment."}
+            content = {"detail": "Cannot access this comment."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
         # Check if user has permission to update it
@@ -270,7 +270,7 @@ class CommentCRUD(viewsets.ViewSet):
             try:
                 comment.update(content["description"])
             except Exception:
-                content = {"detail": f"Invalid form."}
+                content = {"detail": "Invalid form."}
                 return Response(data=content,
                                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -295,7 +295,7 @@ class CommentCRUD(viewsets.ViewSet):
                     project_id
                     issue_id
                     comment_id
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to delete
@@ -305,25 +305,25 @@ class CommentCRUD(viewsets.ViewSet):
             # is contributor to project
             Project.objects.get(id=id)
         except Project.DoesNotExist:
-            content={"detail": "Project doesn't exist."}
+            content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         try:
             # issue exist
             Issue.objects.get(id=issue_id)
         except Issue.DoesNotExist:
-            content={"detail": "Issue doesn't exist."}
+            content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
-            content={"detail": "Comment doesn't exist."}
+            content = {"detail": "Comment doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            content = {"detail": "You don't have permission to " \
+            content = {"detail": "You don't have permission to "
                                  "delete this comment."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
@@ -336,4 +336,3 @@ class CommentCRUD(viewsets.ViewSet):
                    "comment_id": pk}
         return Response(data=content,
                         status=status.HTTP_200_OK)
-

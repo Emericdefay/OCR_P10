@@ -52,7 +52,7 @@ class ProjectCRUD(viewsets.ViewSet):
             (HTTP status_code | detail)
             - 200 : projects' list
             - 204 : No project
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to list
@@ -91,7 +91,7 @@ class ProjectCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : retrieved project
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to create
@@ -117,8 +117,8 @@ class ProjectCRUD(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        """ 
-        POST request 
+        """
+        POST request
         Method create
 
         Create a new projet. Need to be connected to create one.
@@ -131,7 +131,7 @@ class ProjectCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 201 : created project
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to create
@@ -159,10 +159,10 @@ class ProjectCRUD(viewsets.ViewSet):
                 contrib_attrib["permission"] = "1"
                 contrib_attrib["author"] = "author"
                 contrib_attrib["project_id"] = project
-                contrib_attrib["user_id"] = suser 
+                contrib_attrib["user_id"] = suser
                 contributor = Contributor(**contrib_attrib)
             except Exception:
-                content={"detail": "Intern error"}
+                content = {"detail": "Intern error"}
                 return Response(data=content,
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             # Saving process
@@ -192,7 +192,7 @@ class ProjectCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : updated project
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to update
@@ -202,7 +202,7 @@ class ProjectCRUD(viewsets.ViewSet):
             # Check permission
             project_updated = Project.objects.get(id=pk)
         except Project.DoesNotExist:
-            content = {"detail":"Project doesn't exist."}
+            content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         # check if user has permission to update this project
@@ -211,7 +211,7 @@ class ProjectCRUD(viewsets.ViewSet):
         try:
             content = dict(request.data.items())
         except Exception:
-            content = {"detail":"Form is invalid."}
+            content = {"detail": "Form is invalid."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         if content:
@@ -240,7 +240,7 @@ class ProjectCRUD(viewsets.ViewSet):
             (HTTP status_code | detail)
             - 200 : project deleted
                     project_id
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to delete
@@ -257,7 +257,7 @@ class ProjectCRUD(viewsets.ViewSet):
         # Check if user has permission to delete the project
         self.check_object_permissions(request, project_deleted)
         try:
-            project_deleted.delete() # Comments for developpement
+            project_deleted.delete()
             content = {"detail": f"Project {pk} deleted.",
                        "project_id": pk}
             return Response(data=content,

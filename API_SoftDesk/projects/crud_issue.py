@@ -49,7 +49,7 @@ class IssueCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : issue's list
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to list
@@ -68,7 +68,7 @@ class IssueCRUD(viewsets.ViewSet):
         except Exception as e:
             content = {"detail": f"{e}"}
             return Response(data=content,
-                        status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)
         serialized_issues = IssueSerializer(issues, many=True)
         return Response(data=serialized_issues.data,
                         status=status.HTTP_200_OK)
@@ -79,7 +79,7 @@ class IssueCRUD(viewsets.ViewSet):
         Method create
 
         Need to be a contributor of the project to create an issue.
-        
+
         Form:
             - title
             - desc
@@ -91,7 +91,7 @@ class IssueCRUD(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 201 : created issue
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to create
@@ -122,7 +122,7 @@ class IssueCRUD(viewsets.ViewSet):
                 auth_id = User.objects.get(id=request.user.id)
                 assignee_id = User.objects.get(
                                     id=content["assignee_user_id"])
-                data["author_user_id"] = auth_id 
+                data["author_user_id"] = auth_id
                 data["assignee_user_id"] = assignee_id
                 # 'created_time' is automatically implemented
             except Exception:
@@ -161,11 +161,11 @@ class IssueCRUD(viewsets.ViewSet):
             - (priority)
             - (status)
             - (assignee_user_id)
-                
+
         Validate :
             (HTTP status_code | detail)
             - 200 : updated issue
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to update
@@ -223,7 +223,7 @@ class IssueCRUD(viewsets.ViewSet):
             - 200 : delete details
                     project_id
                     issue_id
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to delete
@@ -240,7 +240,7 @@ class IssueCRUD(viewsets.ViewSet):
         # Check if issue exist
         try:
             issue = Issue.objects.get(
-                Q(id=pk) & 
+                Q(id=pk) &
                 Q(project_id=Project.objects.get(id=id)))
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
@@ -258,4 +258,4 @@ class IssueCRUD(viewsets.ViewSet):
         except Exception:
             content = {"detail": "Delete not applied."}
             return Response(data=content,
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)

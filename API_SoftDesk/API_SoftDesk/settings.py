@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Django settings for API_SoftDesk project.
 

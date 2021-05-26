@@ -8,7 +8,7 @@ from rest_framework.routers import (SimpleRouter,)
 from . import views
 
 
-#app_name = ""
+# app_name = ""
 
 router = SimpleRouter()
 router.register(r"",

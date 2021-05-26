@@ -37,7 +37,7 @@ class UserView(UserTHROUGH):
     """Contributor management
 
     Bridge between models : Project | User
-        
+
         model table : through
 
     Generic arguments:
@@ -114,4 +114,3 @@ class CommentView(CommentCRUD):
             - destroy
     """
     pass
-

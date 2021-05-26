@@ -18,7 +18,7 @@ class UserTHROUGH(viewsets.ViewSet):
     """Contributor management
 
     Bridge between models : Project | User
-        
+
         model table : through
 
     Generic arguments:
@@ -40,7 +40,6 @@ class UserTHROUGH(viewsets.ViewSet):
     """
     permission_classes = (ContributorPermissions,)
 
-
     def list(self, request, id):
         """
         GET request
@@ -52,7 +51,7 @@ class UserTHROUGH(viewsets.ViewSet):
         Validate :
             (HTTP status_code | detail)
             - 200 : issue's list
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to list
@@ -70,7 +69,8 @@ class UserTHROUGH(viewsets.ViewSet):
             content = {"detail": "No contributor for project {id}."}
             return Response(data=content,
                             status=status.HTTP_404_NOT_FOUND)
-        serialized_contributors = ContributorSerializer(contributors, many=True)
+        serialized_contributors = ContributorSerializer(contributors,
+                                                        many=True)
         return Response(data=serialized_contributors.data,
                         status=status.HTTP_200_OK)
 
@@ -90,7 +90,7 @@ class UserTHROUGH(viewsets.ViewSet):
             (HTTP status_code | detail)
             - 201 : contributor created
             - 208 : Already a contributor
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 403 : Not permission to create
@@ -103,13 +103,12 @@ class UserTHROUGH(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         if content:
             try:
-                if Contributor.objects.get(
-                        Q(project_id=id) &
-                            Q(user_id=content["user_id"])):
-                    content = {"detail": "User is already a "\
+                if Contributor.objects.get(Q(project_id=id) &
+                                           Q(user_id=content["user_id"])):
+                    content = {"detail": "User is already a "
                                "contributor for the project {id}"}
                     return Response(data=content,
-                            status=status.HTTP_208_ALREADY_REPORTED)
+                                    status=status.HTTP_208_ALREADY_REPORTED)
             except Contributor.DoesNotExist:
                 # User is not already a contributor
                 pass
@@ -126,7 +125,7 @@ class UserTHROUGH(viewsets.ViewSet):
                 return Response(data=content,
                                 status=status.HTTP_400_BAD_REQUEST)
             except Exception:
-                content = {"detail": "You do not have permission " \
+                content = {"detail": "You do not have permission "
                                      "to add contributors."}
                 return Response(data=content,
                                 status=status.HTTP_403_FORBIDDEN)
@@ -144,7 +143,7 @@ class UserTHROUGH(viewsets.ViewSet):
         DELETE request
         Method destroy
 
-        Need to own the project to delete contibutors. 
+        Need to own the project to delete contibutors.
         Cannot delete the owner from contributors
 
         Validate :
@@ -152,7 +151,7 @@ class UserTHROUGH(viewsets.ViewSet):
             - 200 : deleted confirmation
                     project_id
                     user_id
-        Errors : 
+        Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
             - 401 : Unauthorize to delete an author
@@ -160,7 +159,7 @@ class UserTHROUGH(viewsets.ViewSet):
         """
         # Check if author try to delete him self from contrib's list.
         if pk == request.user.id:
-            content = {"detail": "You cannot delete yourself from" \
+            content = {"detail": "You cannot delete yourself from"
                                  "the contributor list."}
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
@@ -174,15 +173,18 @@ class UserTHROUGH(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         # Check if the delete request really concern a project's contributor.
         try:
-            contributor = Contributor.objects.get(Q(user_id=pk) & Q(project_id=id))
+            contributor = Contributor.objects.get(Q(user_id=pk) &
+                                                  Q(project_id=id))
         except Exception:
-            content = {"detail": f"User {pk} is not a contributor for projet {id}."}
+            content = {"detail": f"User {pk} is not a contributor "
+                                 f"for projet {id}."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
         # Check if the user targetted has same right that the author.
         serialized_contributor = ContributorSerializer(contributor)
         if serialized_contributor.data["permission"] == "1":
-            content = {"detail": "You cannot delete a contributor that own it."}
+            content = {"detail": "You cannot delete a contributor "
+                                 "that own it."}
             return Response(data=content,
                             status=status.HTTP_401_UNAUTHORIZED)
         # Check if user has permission to delete contributor.
@@ -191,6 +193,6 @@ class UserTHROUGH(viewsets.ViewSet):
         contributor.delete()
         content = {"detail": f"Contributor {pk} deleted from project {id}.",
                    "project_id": id,
-                   "user_id": pk,}
+                   "user_id": pk, }
         return Response(data=content,
                         status=status.HTTP_200_OK)

@@ -2,7 +2,6 @@
 from rest_framework import permissions
 # Local Libs
 from .models import Contributor, Project
-from .serializers import ContributorSerializer
 
 
 class ProjectPermissions(permissions.BasePermission):
@@ -29,7 +28,7 @@ class ProjectPermissions(permissions.BasePermission):
             return request.user.is_authenticated
         else:
             return False
-    
+
     def has_object_permission(self, request, view, obj):
         """
         Object manipulation.
@@ -42,21 +41,19 @@ class ProjectPermissions(permissions.BasePermission):
             return False
         # -> user_connected
         if view.action == 'retrieve':
-            #User can retrieve element if user_is_admin
-            if request.user.is_superuser:
-                return True
-            #User can retrieve element if user_is_contributor
+            # User can retrieve element if user_is_contributor
             contributors = Contributor.objects.values()
             project = Project.objects.filter(id=obj.id)
             project_contributors = contributors.filter(
-                project_id_id__in=project.values_list("id")).values_list("user_id")
+                project_id_id__in=project.values_list(
+                    "id")).values_list("user_id")
             for contrib in list(project_contributors):
                 if request.user.id in contrib:
                     return True
             return False
         elif view.action in ["update", "destroy"]:
-            # User can update and destroy element is user_created_it or user_admin
-            return obj.author_user_id == request.user or request.user.is_superuser
+            # User can update and destroy element if user_created_it
+            return obj.author_user_id == request.user
         else:
             return False
 
@@ -82,14 +79,18 @@ class ContributorPermissions(permissions.BasePermission):
         there own elements if user_connected.
         """
         if view.action == 'list':
-            # User should see all elements if user_admin_connected
+            # User should see all elements if user_connected
             return request.user.is_authenticated
-        elif view.action in ["create", "retrieve", "update", "partial_update", "destroy"]:
-            # User should retrieve, update, partial_update and destroy there own elements if user_connected
+        elif view.action in ["create",
+                             "retrieve",
+                             "update",
+                             "destroy"]:
+            # User should retrieve, update and destroy there own elements
+            # if user_connected
             return request.user.is_authenticated
         else:
             return False
-    
+
     def has_object_permission(self, request, view, obj):
         """
         Object manipulation.
@@ -100,22 +101,24 @@ class ContributorPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             # No permission if not user_connected
             return False
-        # -> user_connected
+        # user_connected
         if view.action == 'retrieve':
-            # User can get element if user_is_contributor or user_admin
+            # User can get element if user_is_contributor
             contributors = Contributor.objects.values()
             project = Project.objects.filter(id=obj.id)
-            project_contributors = contributors.filter(project_id_id__in=project.values_list("id")).values_list("user_id")
+            project_contributors = contributors.filter(
+                project_id_id__in=project.values_list(
+                    "id")).values_list("user_id")
             for contrib in list(project_contributors):
                 if request.user.id in contrib:
                     return True
             return False
         elif view.action == "update":
-            # User can update element is user_created_it or user_admin
-            return obj.author_user_id == request.user or request.user.is_superuser
+            # User can update element is user_created_it
+            return obj.author_user_id == request.user
         elif view.action == "destroy":
-            # User can destroy element is user_created_it or user_admin
-            return obj.user_id == request.user or request.user.is_superuser
+            # User can destroy element is user_created_it
+            return obj.user_id == request.user
         else:
             return False
 
@@ -140,14 +143,15 @@ class IssuePermissions(permissions.BasePermission):
         there own elements if user_connected.
         """
         if view.action == 'list':
-            # User should see all elements if user_admin_connected
+            # User should see all elements if user_connected
             return request.user.is_authenticated
         elif view.action in ["create", "retrieve", "update", "destroy"]:
-            # User should retrieve, update, partial_update and destroy there own elements if user_connected
+            # User should retrieve, update and destroy there own elements
+            # if user_connected
             return request.user.is_authenticated
         else:
             return False
-    
+
     def has_object_permission(self, request, view, obj):
         """
         Object manipulation.
@@ -160,17 +164,19 @@ class IssuePermissions(permissions.BasePermission):
             return False
         # -> user_connected
         if view.action == 'retrieve':
-            # User can get element if user_is_contributor or user_admin
+            # User can get element if user_is_contributor
             contributors = Contributor.objects.values()
             project = Project.objects.filter(id=obj.id)
-            project_contributors = contributors.filter(project_id_id__in=project.values_list("id")).values_list("user_id")
+            project_contributors = contributors.filter(
+                project_id_id__in=project.values_list(
+                    "id")).values_list("user_id")
             for contrib in list(project_contributors):
                 if request.user.id in contrib:
                     return True
             return False
         elif view.action in ["update", "destroy"]:
-            # User can update element is user_created_it or user_admin
-            return obj.author_user_id == request.user or request.user.is_superuser
+            # User can update element is user_created_it
+            return obj.author_user_id == request.user
         else:
             return False
 
@@ -196,14 +202,15 @@ class CommentPermissions(permissions.BasePermission):
         there own elements if user_connected.
         """
         if view.action == 'list':
-            # User should see all elements if user_admin_connected
+            # User should see all elements if user_connected
             return request.user.is_authenticated
         elif view.action in ["create", "retrieve", "update", "destroy"]:
-            # User should retrieve, update, partial_update and destroy there own elements if user_connected
+            # User should retrieve, update and destroy there own elements
+            # if user_connected
             return request.user.is_authenticated
         else:
             return False
-    
+
     def has_object_permission(self, request, view, obj):
         """
         Object manipulation.
@@ -216,17 +223,18 @@ class CommentPermissions(permissions.BasePermission):
             return False
         # -> user_connected
         if view.action == 'retrieve':
-            # User can get element if user_is_contributor or user_admin
+            # User can get element if user_is_contributor
             contributors = Contributor.objects.values()
             project = Project.objects.filter(id=obj.id)
             project_contributors = contributors.filter(
-                project_id_id__in=project.values_list("id")).values_list("user_id")
+                project_id_id__in=project.values_list(
+                    "id")).values_list("user_id")
             for contrib in list(project_contributors):
                 if request.user.id in contrib:
                     return True
             return False
         elif view.action in ["update", "destroy"]:
-            # User can update element is user_created_it or user_admin
-            return obj.author_user_id == request.user or request.user.is_superuser
+            # User can update element is user_created_it
+            return obj.author_user_id == request.user
         else:
             return False
