@@ -17,7 +17,7 @@
 
 ---
 
-<p align="center"> RESTful API
+<p align="center"> RESTful API for SoftDesk
     <br> 
 </p>
 
@@ -28,6 +28,7 @@
 - [🏁 Getting Started <a name="getting_started"></a>](#-getting-started-)
   - [Prerequisites](#prerequisites)
   - [Installing](#installing)
+  - [Linter](#linter)
 - [🎈 Usage <a name = "usage"></a>](#-usage-)
 - [⛏️ Built Using <a name = "built_using"></a>](#️-built-using-)
 - [Recommandations <a name = "recommandations"></a>](#recommandations-)
@@ -44,13 +45,13 @@ Allow developper to create the front-end on Android, IOS & computer.
 
 ## 🏁 Getting Started <a name="getting_started"></a>
 
-Those instructions will bring you the API at the url : `http://127.0.0.1:8000/`. <br>
+Those instructions will bring you the API at the url : `http://127.0.0.1:8000/`.<br>
 
 ### Prerequisites
 
 <p>Before started to setup the RESTful API, you need to get : </p>
 <ul>
-  <li>Python >= 3.6</li>
+  <li>Python <strong>>= 3.6</strong></li>
   <li>Postman</li>
   <li>Git</li>
 </ul>
@@ -60,17 +61,22 @@ Those instructions will bring you the API at the url : `http://127.0.0.1:8000/`.
 
 - Create a folder
 - Clone the project `git clone` inside the folder
-- Go to root `cd OCR_P10`
+- Go to the folder OCR_P10 `cd OCR_P10`
 - Create environment named env `python -m venv env`
 - Start the environment `env\Scripts\activate.bat`
 - Install requirements `pip install -r requirements.txt`
 - Run server `python API_SoftDesk/manage.py runserver`
-- Go to url : `http://127.0.0.1:8000/`
 
+### Linter
+
+If you want to check the PEP8 from the code :
+
+- From OCR_P10 go to API_SoftDesk `cd API_SoftDesk`
+- run `flake8`
 
 ## 🎈 Usage <a name = "usage"></a>
 
-Add notes about how to use the system.
+<p>Once you ran the server, you can check those endpoints and get documentation on them from the <a href="https://documenter.getpostman.com/view/15717033/TzXwFyk3">Postman API Collection</a>.</p>
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 

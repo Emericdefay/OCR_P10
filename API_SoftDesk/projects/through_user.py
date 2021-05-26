@@ -37,6 +37,10 @@ class UserTHROUGH(viewsets.ViewSet):
             - list
             - create
             - destroy
+
+    Generic Error:
+        (HTTP status_code | detail)
+        - 401 : jwt_access_token time over
     """
     permission_classes = (ContributorPermissions,)
 
@@ -115,6 +119,8 @@ class UserTHROUGH(viewsets.ViewSet):
             try:
                 content["user_id"] = User.objects.get(id=content['user_id'])
                 content["project_id"] = Project.objects.get(id=id)
+                # To secure and set one and only author.
+                content["permission"] = "0"
                 contributor = Contributor(**content)
             except ValueError:
                 content = {"detail": "User doesn't exist."}

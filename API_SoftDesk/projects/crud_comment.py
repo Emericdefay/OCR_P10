@@ -41,6 +41,10 @@ class CommentCRUD(viewsets.ViewSet):
             - create
             - update
             - destroy
+
+    Generic Error:
+        (HTTP status_code | detail)
+        - 401 : jwt_access_token time over
     """
     permission_classes = (CommentPermissions,)
 

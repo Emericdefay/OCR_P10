@@ -36,6 +36,10 @@ class IssueCRUD(viewsets.ViewSet):
             - create
             - update
             - destroy
+
+    Generic Error:
+        (HTTP status_code | detail)
+        - 401 : jwt_access_token time over
     """
     permission_classes = (IssuePermissions,)
 
@@ -120,8 +124,13 @@ class IssueCRUD(viewsets.ViewSet):
                 data["project_id"] = Project.objects.get(id=id)
                 data["status"] = content["status"]
                 auth_id = User.objects.get(id=request.user.id)
-                assignee_id = User.objects.get(
-                                    id=content["assignee_user_id"])
+                # assignee:
+                if "assignee_user_id" in content:
+                    assignee_id = User.objects.get(
+                                        id=content["assignee_user_id"])
+                # if no assignee, set assignee_user_id = request.user.id
+                else:
+                    assignee_id = User.objects.get(request.user.id)
                 data["author_user_id"] = auth_id
                 data["assignee_user_id"] = assignee_id
                 # 'created_time' is automatically implemented

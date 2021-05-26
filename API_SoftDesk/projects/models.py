@@ -5,6 +5,14 @@ from django.db.models.deletion import CASCADE
 
 
 class Project(models.Model):
+    """Projects model
+
+    Fields:
+        - title
+        - description
+        - type
+        - author_user_id
+    """
     title = models.CharField(
         max_length=511,
         null=False,
@@ -25,6 +33,19 @@ class Project(models.Model):
 
 
 class Issue(models.Model):
+    """Issues model
+
+    Fields:
+        - title
+        - desc
+        - tag
+        - priority
+        - project_id
+        - status
+        - author_user_id
+        - assignee_user_id
+        - created_time : automaticaly generated
+    """
     title = models.CharField(
         max_length=511,
         null=False,
@@ -70,6 +91,14 @@ class Issue(models.Model):
 
 
 class Comment(models.Model):
+    """Comments model
+
+    Fields:
+        - description
+        - author_user_id
+        - issue_id
+        - created_time : automaticaly generated
+    """
     description = models.CharField(
         max_length=4095,
         null=False,
@@ -91,6 +120,14 @@ class Comment(models.Model):
 
 
 class Contributor(models.Model):
+    """Contributors model
+
+    Fields:
+        - user_id
+        - project_id
+        - permission
+        - role
+    """
     user_id = models.ForeignKey(
         User,
         on_delete=CASCADE,

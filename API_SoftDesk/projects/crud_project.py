@@ -38,6 +38,10 @@ class ProjectCRUD(viewsets.ViewSet):
             - retrieve
             - update
             - destroy
+
+    Generic Error:
+        (HTTP status_code | detail)
+        - 401 : jwt_access_token time over
     """
     permission_classes = (ProjectPermissions,)
 
