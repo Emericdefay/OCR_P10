@@ -1,0 +1,966 @@
+{
+	"info": {
+		"_postman_id": "c2738df1-ea36-465f-89b0-4dc782d76003",
+		"name": "P10_API",
+		"description": "# Introduction\n<p>\n    <strong>Postman collection :</strong><br>\n    Endpoints with methods list. Use to develop front-end.<br>\n    Need to setup the API localy (127.0.0.1/8000) to test those endpoints.<br>\n</p>\n\n# Overview\n<p>\n    First, run the API localy, following the steps from\n    <a href=\"https://github.com/Emericdefay/OCR_P10\">this github repo.</a>\n</p>\n<p>\n    Then you can test every endpoints from this collection.\n</p>\n\n# Authorization\n<p>\n    This API use Json Web Token authentication. So each endpoint need a \n    header key : <br>\n<strong>Authorization : Bearer {{jwt_access_token}}</strong>\n</p>\n\n<p>\n    Using the requests :\n    <ul>\n        <li>authentication</li>\n        <li>auth refresh</li>\n    </ul><br>\n    You set global variables {{jwt_access_token}} and {{jwt_refresh_token}}<br>\n    Those variables avoid you to copy/paste tokens in the header key.<br>\n    Facilitate the usage of the collection.\n</p>\n<p>\nDuring your testing process you will see an error: <br>\n<strong>ERROR 401 </strong><br>\n<strong>\"detail\": \"Given token not valid for any token type\"</strong><br>\nMeaning that you have to refresh your authentication. (JWT security)\n</p>\n\n# Errors\n<p>\n    Documentation of each endpoint mention HTTP status codes.\n</p>",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Project management",
+			"item": [
+				{
+					"name": "create new project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "first real project",
+									"description": "\"",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "comment",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "urgfzeezf",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nCreate a new projet. Need to be connected to create one.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>description</li>\n    <li>type</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>201 : created project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>500 : Intern error</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "view secured projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nShow all projects linked to the authenticated user\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : list project</li>\n    <li>204 : No project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "view secured project id=",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod retrieve<br>\n\nGet a specific project for the authenticated user.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : retrieved project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to retrieve</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "update project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "type",
+									"value": "aaaz",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "dz",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								""
+							]
+						},
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own project to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>(title)</li>\n    <li>(description)</li>\n    <li>(type)</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own project to destroy it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : project deleted<br>\n              project_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to destroy</li>\n    <li>417 : Expectation failed</li>\n</ul>"
+					},
+					"response": []
+				}
+			],
+			"description": "Projects management\n\n    Generic argument:\n        - pk (int) : ID of the project\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        AUTHENTICATED :\n            - create\n        Contributor :\n            - list\n            - retrieve\n        Owner :\n            - list\n            - retrieve\n            - update\n            - destroy"
+		},
+		{
+			"name": "Issue management",
+			"item": [
+				{
+					"name": "list issues from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list\n\nList all issues from a project if user is a contributor\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "create issue for project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "problem n1",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "this is a big problem",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "not done yet",
+									"type": "text"
+								},
+								{
+									"key": "assignee_user_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor of the project to create an issue.\n        \n<p><strong>Form:</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "update issue from project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "problem n2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								""
+							]
+						},
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own issue to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "delete issue from project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own issue to delete it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : delete details<br>\n    project_id<br>\n    issue_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to delete</li>\n    <li>500 : Delete failed</li>\n</ul>"
+					},
+					"response": []
+				}
+			],
+			"description": "Issue management\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the issue\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        Contributor :\n            - list\n            - create\n        Owner :\n            - list\n            - create\n            - update\n            - destroy"
+		},
+		{
+			"name": "Users management",
+			"item": [
+				{
+					"name": "add contributor to project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "role",
+									"value": "testeur",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"users",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nAdd a contributor to the project that user own.<br>\nNeed to be the author to add a contributor.\n\n<p><strong>Form:</strong></p>\n<ul>\n    <li>user_id</li>\n    <li>role</li>\n</ul>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : contributor created</li>\n    <li>208 : Already a contributor</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "delete contributor from project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/users/{{user_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"users",
+								"{{user_id}}",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own the project to delete contibutors.<br>\nCannot delete the owner from contributors\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : deleted confirmation<br>\n              project_id<br>\n              user_id<br></li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>401 : Unauthorize to delete an author</li>\n    <li>403 : Not permission to delete</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "list contributors from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"users",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nList all contributor for the project.<br>\nNeed to be one of them to get the list.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to list</li>\n    <li>404 : Error no contributor found</li>\n</ul>"
+					},
+					"response": []
+				}
+			],
+			"description": "Contributor management\n\n    Bridge between models : Project | User\n        \n        model table : through\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the contributor\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - DELETE : delete\n\n    Permissions:\n        Contributor : (Project | User)\n            - list\n        Owner : (Project | User)\n            - list\n            - create\n            - destroy"
+		},
+		{
+			"name": "Comments management",
+			"item": [
+				{
+					"name": "list comments from issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nNeed to be a contributor to list comments.<br>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li>200 : comments' list</li>\n   <li>204 : No comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "create comment for issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "comm",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor to the project<br>\nto create a comment on a existing issue.<br>\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</p></strong>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "update comment from issue",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "update comm",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/{{comment_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								"{{comment_id}}",
+								""
+							]
+						},
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own the comment to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : data updated</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | invalid form</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment from issue",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/{{comment_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								"{{comment_id}}",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n<br>\nNeed to own the comment to destroy it.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li> \n       200 : Successfully delete comment<br>\n           project_id<br>\n           issue_id<br>\n           comment_id<br>\n   </li>\n</ul>\n<p><strong>Errors :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to delete</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "get one comment from issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/{{comment_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								"{{comment_id}}",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod retrieve<br>\n<br>\nNeed to be a contributor to get a comment.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n- 200 : data retrieve\n\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n- 400 : Element doesn't exist\n- 403 : Not permission to retrieve"
+					},
+					"response": []
+				}
+			],
+			"description": "Comment management\n\n    Generic arguments:\n        - id (int)       : ID of the project\n        - issue_id (int) : ID of the issue\n        - pk (int)       : ID of the comment\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:    \n        Contributor :\n            - list\n            - retrieve\n            - create\n        Owner :\n            - list\n            - retrieve\n            - create\n            - update\n            - destroy"
+		},
+		{
+			"name": "signup a User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "user2",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "user2@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Motdepasse123",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "user2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/signup/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"signup",
+						""
+					]
+				},
+				"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to create an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>first_name</li>\n  <li>last_name</li>\n  <li>email</li>\n  <li>password</li>\n</ul>"
+			},
+			"response": []
+		},
+		{
+			"name": "authentification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"if (response.access)\r",
+							"{\r",
+							"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+							"\r",
+							"pm.test(\"Status test\", function()\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "user1",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Motdepasse123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						""
+					]
+				},
+				"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+			},
+			"response": []
+		},
+		{
+			"name": "auth refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.globals.set(\"jwt_access_token\", response.access);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "refresh",
+							"value": "{{jwt_refresh_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/login/refresh/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						"refresh",
+						""
+					]
+				},
+				"description": "Refresh the JWT access token given the refresh token."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

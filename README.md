@@ -1,6 +1,7 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://user.oc-static.com/upload/2020/09/22/16007803099977_P8%20%281%29.png" alt="SoftDesk"></a>
+    <img width=200px height=200px src="https://user.oc-static.com/upload/2020/09/22/16007803099977_P8%20%281%29.png" alt="SoftDesk">
+  </a>
 </p>
 
 <h3 align="center">Create a secured RESTful API using Django REST</h3>
@@ -16,62 +17,77 @@
 
 ---
 
-<p align="center"> Few lines describing the project.
+<p align="center"> RESTful API for SoftDesk
     <br> 
 </p>
 
 ## 📝 Table of Contents
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [Authors](#authors)
+- [📝 Table of Contents](#-table-of-contents)
+- [About <a name="about"></a>](#about-)
+- [🏁 Getting Started <a name="getting_started"></a>](#-getting-started-)
+  - [Prerequisites](#prerequisites)
+  - [Installing](#installing)
+  - [Linter](#linter)
+- [🎈 Usage <a name = "usage"></a>](#-usage-)
+- [⛏️ Built Using <a name = "built_using"></a>](#️-built-using-)
+- [Recommandations <a name = "recommandations"></a>](#recommandations-)
+- [✍️ Authors <a name = "authors"></a>](#️-authors-)
 
-## About <a name = "about"></a>
+---
 
-Write about 1-2 paragraphs describing the purpose of the project.
+## About <a name="about"></a>
 
-## 🏁 Getting Started <a name = "getting_started"></a>
+<p>
+This project provide a RESTful API localy.<br>
+Allow developper to create the front-end on Android, IOS & computer.
+</p>
 
-instructions pres
+## 🏁 Getting Started <a name="getting_started"></a>
+
+Those instructions will bring you the API at the url : `http://127.0.0.1:8000/`.<br>
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
-
-```
-Give examples
-```
+<p>Before started to setup the RESTful API, you need to get : </p>
+<ul>
+  <li>Python <strong>>= 3.6</strong></li>
+  <li>Postman</li>
+  <li>Git</li>
+</ul>
+<p>It will provide you tools to extract, run and detail the API.</p>
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+- Create a folder
+- Clone the project `git clone` inside the folder
+- Go to the folder OCR_P10 `cd OCR_P10`
+- Create environment named env `python -m venv env`
+- Start the environment `env\Scripts\activate.bat`
+- Install requirements `pip install -r requirements.txt`
+- Run server `python API_SoftDesk/manage.py runserver`
 
-Say what the step will be
+### Linter
 
-```
-Give the example
-```
+If you want to check the PEP8 from the code :
 
-And repeat
+- From OCR_P10 go to API_SoftDesk `cd API_SoftDesk`
+- run `flake8`
 
-```
-until finished
-```
+## 🎈 Usage <a name = "usage"></a>
 
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
+<p>Once you ran the server, you can check those endpoints and get documentation on them from the <a href="https://documenter.getpostman.com/view/15717033/TzXwFyk3">Postman API Collection</a>.</p>
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [SQLite3](https://www.sqlite.org/index.html) - Database
-- [Django](https://www.djangoproject.com/) - Website Framework
 - [Python](https://www.python.org/) - Programming language
+- [Django](https://www.djangoproject.com/) - Website Framework
+- [Django REST Framework](https://www.django-rest-framework.org/) - REST Framework for Django
+- [SQLite3](https://www.sqlite.org/index.html) - Database
+
+## Recommandations <a name = "recommandations"></a>
+
+- [Postman](https://www.postman.com/) - API Development
 
 ## ✍️ Authors <a name = "authors"></a>
 
