@@ -157,11 +157,13 @@ class ProjectCRUD(viewsets.ViewSet):
                 content = {"detail": "Invalid keys in form."}
                 return Response(data=content,
                                 status=status.HTTP_400_BAD_REQUEST)
+            # Saving process
+            project.save()
             # Create the first "contributor": author
             try:
                 contrib_attrib = dict()
                 contrib_attrib["permission"] = "1"
-                contrib_attrib["author"] = "author"
+                contrib_attrib["role"] = "author"
                 contrib_attrib["project_id"] = project
                 contrib_attrib["user_id"] = suser
                 contributor = Contributor(**contrib_attrib)
@@ -169,8 +171,7 @@ class ProjectCRUD(viewsets.ViewSet):
                 content = {"detail": "Intern error"}
                 return Response(data=content,
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            # Saving process
-            project.save()
+            #Saving process
             contributor.save()
 
             serialized_project = ProjectSerializer(project)

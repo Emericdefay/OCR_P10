@@ -25,7 +25,7 @@ class Signup(APIView):
 
         Validate :
             (HTTP status_code | detail)
-            - 200 : user created
+            - 201 : user created
         Errors :
             (HTTP status_code | detail)
             - 400 : Invalid form
@@ -54,7 +54,7 @@ class Signup(APIView):
             user.save()
             content = {"detail": "User created"}
             return Response(data=content,
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_201_CREATED)
         else:
             content = {"detail": "Request content is empty"}
             return Response(data=content,
