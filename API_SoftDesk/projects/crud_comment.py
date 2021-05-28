@@ -1,6 +1,6 @@
 # Django Libs
 from django.contrib.auth.models import User
-# from django.db.models import Q
+from django.db.models import Q
 
 # Other frameworks Libs
 from rest_framework import viewsets
@@ -9,6 +9,7 @@ from rest_framework import status
 
 # Local packages
 from .models import (Project,
+                     Contributor,
                      Issue,
                      Comment,)
 from .permissions import (CommentPermissions,)
@@ -66,12 +67,19 @@ class CommentCRUD(viewsets.ViewSet):
         """
         # Check if project exist
         try:
-            # Check if user is contributor
             Project.objects.get(id=id)
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
+        # Check user is contributor
+        try:
+            Contributor.objects.get(Q(project_id=id)&
+                                    Q(user_id=request.user.id))
+        except Contributor.DoesNotExist:
+            content = {"detail": "No contributor for the project."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
         # Check if issue exists
         try:
             Issue.objects.get(id=issue_id)
@@ -117,6 +125,14 @@ class CommentCRUD(viewsets.ViewSet):
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
+        # Check user is contributor
+        try:
+            Contributor.objects.get(Q(project_id=id)&
+                                    Q(user_id=request.user.id))
+        except Contributor.DoesNotExist:
+            content = {"detail": "No contributor for the project."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
         # Check if issue exist
         try:
             Issue.objects.get(id=issue_id)
@@ -184,6 +200,14 @@ class CommentCRUD(viewsets.ViewSet):
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
+        # Check user is contributor
+        try:
+            Contributor.objects.get(Q(project_id=id)&
+                                    Q(user_id=request.user.id))
+        except Contributor.DoesNotExist:
+            content = {"detail": "No contributor for the project."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
         # issue exist
         try:
             Issue.objects.get(id=issue_id)
@@ -272,13 +296,13 @@ class CommentCRUD(viewsets.ViewSet):
                                 status=status.HTTP_400_BAD_REQUEST)
             # Check if form is valid
             try:
-                comment.update(content["description"])
+                comment.update(description=content["description"])
             except Exception:
                 content = {"detail": "Invalid form."}
                 return Response(data=content,
                                 status=status.HTTP_400_BAD_REQUEST)
-
-            serialized_comment = CommentSerializer(comment, many=True)
+            comment = Comment.objects.get(id=pk)
+            serialized_comment = CommentSerializer(comment)
             return Response(data=serialized_comment.data,
                             status=status.HTTP_200_OK)
         else:
