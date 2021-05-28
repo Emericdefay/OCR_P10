@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # Local packages
-from .models import (Project,
+from .models import (Contributor, Project,
                      Issue,)
 from .permissions import (IssuePermissions,)
 from .serializers import (IssueSerializer,)
@@ -60,12 +60,19 @@ class IssueCRUD(viewsets.ViewSet):
         """
         # Check if project exist
         try:
-            # Check if user is contributor
             Project.objects.get(id=id)
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
                             status=status.HTTP_400_BAD_REQUEST)
+        # Check user is contributor
+        try:
+            Contributor.objects.get(Q(project_id=id)&
+                                    Q(user_id=request.user.id))
+        except Contributor.DoesNotExist:
+            content = {"detail": "No contributor for the project."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
         # List issues
         try:
             issues = Issue.objects.filter(project_id=id)
@@ -106,6 +113,16 @@ class IssueCRUD(viewsets.ViewSet):
             Project.objects.get(id=id)
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
+
+        # Check user is contributor
+        try:
+            Contributor.objects.get(Q(project_id=id)&
+                                    Q(user_id=request.user.id))
+        except Contributor.DoesNotExist:
+            content = {"detail": "No contributor for the project."}
+            return Response(data=content,
+                            status=status.HTTP_403_FORBIDDEN)
+
         # Check if form is valid
         try:
             content = dict(request.data.items())
@@ -130,7 +147,7 @@ class IssueCRUD(viewsets.ViewSet):
                                         id=content["assignee_user_id"])
                 # if no assignee, set assignee_user_id = request.user.id
                 else:
-                    assignee_id = User.objects.get(request.user.id)
+                    assignee_id = User.objects.get(id=request.user.id)
                 data["author_user_id"] = auth_id
                 data["assignee_user_id"] = assignee_id
                 # 'created_time' is automatically implemented
@@ -148,7 +165,7 @@ class IssueCRUD(viewsets.ViewSet):
             # Saving process
             issue.save()
             # Serialize issue
-            serialized_issue = IssueSerializer(issue, many=True)
+            serialized_issue = IssueSerializer(issue)
             return Response(data=serialized_issue.data,
                             status=status.HTTP_201_CREATED)
         else:
@@ -207,12 +224,13 @@ class IssueCRUD(viewsets.ViewSet):
         if content:
             # Check if content is valid
             try:
-                issue = Issue.objects.filter(id=pk).update(**content)
+                Issue.objects.filter(id=pk).update(**content)
             except Exception:
                 content = {"detail": "Invalid form."}
                 return Response(data=content,
                                 status=status.HTTP_400_BAD_REQUEST)
-            serialized_issue = IssueSerializer(issue, many=True)
+            issue = Issue.objects.get(id=pk)
+            serialized_issue = IssueSerializer(issue)
             return Response(data=serialized_issue.data,
                             status=status.HTTP_200_OK)
         else:

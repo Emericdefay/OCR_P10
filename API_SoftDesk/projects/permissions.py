@@ -116,7 +116,6 @@ class IssuePermissions(permissions.BasePermission):
             - destroy
 
         Object manipulation permissions :
-            - retrieve
             - update
             - destroy
     """
@@ -128,7 +127,7 @@ class IssuePermissions(permissions.BasePermission):
         if view.action == 'list':
             # User should see all elements if user_connected
             return request.user.is_authenticated
-        elif view.action in ["create", "retrieve", "update", "destroy"]:
+        elif view.action in ["create", "update", "destroy"]:
             # User should retrieve, update and destroy there own elements
             # if user_connected
             return request.user.is_authenticated
@@ -145,21 +144,11 @@ class IssuePermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             # No permission if not user_connected
             return False
-        # -> user_connected
-        if view.action == 'retrieve':
-            # User can get element if user_is_contributor
-            contributors = Contributor.objects.values()
-            project = Project.objects.filter(id=obj.id)
-            project_contributors = contributors.filter(
-                project_id_id__in=project.values_list(
-                    "id")).values_list("user_id")
-            for contrib in list(project_contributors):
-                if request.user.id in contrib:
-                    return True
-            return False
         elif view.action in ["update", "destroy"]:
-            # User can update element is user_created_it
-            return obj.author_user_id == request.user
+            # User can update, destroy element if user_created_it
+            project = Project.objects.get(id=obj.project_id.id)
+            return project in Project.objects.filter(
+                                            author_user_id=request.user.id)
         else:
             return False
 
