@@ -67,7 +67,7 @@ class IssueCRUD(viewsets.ViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         # Check user is contributor
         try:
-            Contributor.objects.get(Q(project_id=id)&
+            Contributor.objects.get(Q(project_id=id) &
                                     Q(user_id=request.user.id))
         except Contributor.DoesNotExist:
             content = {"detail": "No contributor for the project."}
@@ -116,7 +116,7 @@ class IssueCRUD(viewsets.ViewSet):
 
         # Check user is contributor
         try:
-            Contributor.objects.get(Q(project_id=id)&
+            Contributor.objects.get(Q(project_id=id) &
                                     Q(user_id=request.user.id))
         except Contributor.DoesNotExist:
             content = {"detail": "No contributor for the project."}

@@ -6,9 +6,7 @@ from rest_framework.test import (APITestCase,)
 
 # Locals Libs
 from ..models import (Project,
-                      Contributor,
-                      Issue,
-                      Comment)
+                      Contributor,)
 
 
 class IssueTests(APITestCase):
@@ -101,7 +99,6 @@ class IssueTests(APITestCase):
             'role': 'test',
             'permission': '0',
         }
-        
         contrib = Contributor(**contrib_form)
         contrib.save()
 
@@ -168,7 +165,7 @@ class IssueTests(APITestCase):
         }
         response = self.client.post(path=url, data=issue_form)
         self.assertEqual(response.status_code, 201)
-        
+
     def test_AUT_AT_ri(self):
         """Test
         Authenticate user /
@@ -524,7 +521,7 @@ class IssueTests(APITestCase):
         updated_form = {
             'title': 'issue test'
         }
-        response = self.client.put(path=url, data= updated_form)
+        response = self.client.put(path=url, data=updated_form)
         self.assertEqual(response.status_code, 401)
 
     def test_UUT_di(self):
@@ -544,7 +541,7 @@ class IssueTests(APITestCase):
         self.client.force_authenticate(user=user)
         self.client.post(path=url, data=issue_form)
         self.client.logout()
-        
+
         url = 'http://127.0.0.1:8000/projects/1/issues/1/'
         response = self.client.delete(path=url)
         self.assertEqual(response.status_code, 401)

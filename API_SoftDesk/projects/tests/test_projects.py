@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Django REST Libs
 from rest_framework.test import (APITestCase,)
-    
+
 
 class ProjectTests(APITestCase):
     """
@@ -70,7 +70,7 @@ class ProjectTests(APITestCase):
             'email': 'test@test.com',
         }
         user = User.objects.create_user(**user_form)
-        user.save()       
+        user.save()
 
     def test_AUT_GT_cp(self):
         """Test
@@ -101,7 +101,6 @@ class ProjectTests(APITestCase):
         response = self.client.get(path=url)
         self.assertEqual(response.status_code, 204)
 
-
     def test_AUT_AT_lp(self):
         """Test
         Authenticated user /
@@ -113,7 +112,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         response = self.client.get(path=url)
@@ -130,7 +129,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         url = 'http://127.0.0.1:8000/projects/1/'
@@ -148,7 +147,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -158,7 +157,7 @@ class ProjectTests(APITestCase):
         }
         response = self.client.put(path=url, data=project_form)
         self.assertEqual(response.status_code, 200)
-        
+
     def test_AUT_AT_dp(self):
         """Test
         Authenticated user /
@@ -170,7 +169,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -189,7 +188,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -214,7 +213,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -239,7 +238,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -267,7 +266,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -292,7 +291,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -313,7 +312,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -334,7 +333,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -358,7 +357,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
 
@@ -367,7 +366,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/1/'
         response = self.client.delete(path=url)
         self.assertEqual(response.status_code, 403)
-    
+
     def test_UUT_lp(self):
         """Test
         Unauthenticated user /
@@ -378,7 +377,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         self.client.logout()
@@ -397,7 +396,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         self.client.logout()
@@ -421,7 +420,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         self.client.logout()
@@ -440,7 +439,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         self.client.logout()
@@ -462,7 +461,7 @@ class ProjectTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/'
         project = {'title': 'project',
                    'description': 'project test',
-                   'type': 'test',}
+                   'type': 'test'}
         self.client.force_authenticate(user=user)
         self.client.post(url, project, format='json')
         self.client.logout()

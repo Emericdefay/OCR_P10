@@ -6,9 +6,7 @@ from rest_framework.test import (APITestCase,)
 
 # Locals Libs
 from ..models import (Project,
-                      Contributor,
-                      Issue,
-                      Comment)
+                      Contributor,)
 
 
 class ContributorTests(APITestCase):
@@ -91,7 +89,6 @@ class ContributorTests(APITestCase):
             'role': 'test',
             'permission': '0',
         }
-        
         contrib = Contributor(**contrib_form)
         contrib.save()
 
@@ -315,7 +312,7 @@ class ContributorTests(APITestCase):
         self.client.force_authenticate(user=user3)
         response = self.client.get(path=url)
         self.assertEqual(response.content, b'[]')
-    
+
     def test_AUT_NCT_rc(self):
         """Test
         Authenticated user /

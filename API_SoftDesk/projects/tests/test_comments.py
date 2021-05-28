@@ -7,8 +7,7 @@ from rest_framework.test import (APITestCase,)
 # Locals Libs
 from ..models import (Project,
                       Contributor,
-                      Issue,
-                      Comment)
+                      Issue,)
 
 
 class CommentTests(APITestCase):
@@ -103,7 +102,6 @@ class CommentTests(APITestCase):
             'role': 'test',
             'permission': '0',
         }
-        
         contrib = Contributor(**contrib_form)
         contrib.save()
 
@@ -470,7 +468,7 @@ class CommentTests(APITestCase):
         }
         response = self.client.post(path=url, data=comment_form)
         self.assertEqual(response.status_code, 401)
-        
+
     def test_UUT_rc(self):
         """Test
         Unauthenticate user /

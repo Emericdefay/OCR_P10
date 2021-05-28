@@ -1,5 +1,3 @@
-# Django Libs
-from django.contrib.auth.models import User
 # Django REST Libs
 from rest_framework import permissions
 # Local Libs

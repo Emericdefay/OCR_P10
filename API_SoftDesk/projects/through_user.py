@@ -105,7 +105,7 @@ class UserTHROUGH(viewsets.ViewSet):
                                                       Q(permission='1'))
             if contrib_creator.user_id.id != request.user.id:
                 content = {"detail": "You're not the author."
-                                    "You cannot add contributors."}
+                                     "You cannot add contributors."}
                 return Response(data=content,
                                 status=status.HTTP_403_FORBIDDEN)
         except Contributor.DoesNotExist:

@@ -171,7 +171,7 @@ class ProjectCRUD(viewsets.ViewSet):
                 content = {"detail": "Intern error"}
                 return Response(data=content,
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            #Saving process
+            # Saving process
             contributor.save()
 
             serialized_project = ProjectSerializer(project)
