@@ -54,7 +54,7 @@ class UserTHROUGH(viewsets.ViewSet):
 
         Validate :
             (HTTP status_code | detail)
-            - 200 : issue's list
+            - 200 : contributors' list
         Errors :
             (HTTP status_code | detail)
             - 400 : Element doesn't exist
@@ -99,6 +99,18 @@ class UserTHROUGH(viewsets.ViewSet):
             - 400 : Element doesn't exist
             - 403 : Not permission to create
         """
+        # Check if creator is author
+        try:
+            contrib_creator = Contributor.objects.get(Q(project_id=id) &
+                                                      Q(permission='1'))
+            if contrib_creator.user_id.id != request.user.id:
+                content = {"detail": "You're not the author."
+                                     "You cannot add contributors."}
+                return Response(data=content,
+                                status=status.HTTP_403_FORBIDDEN)
+        except Contributor.DoesNotExist:
+            pass
+
         try:
             content = dict(request.data.items())
         except Exception:
@@ -110,7 +122,7 @@ class UserTHROUGH(viewsets.ViewSet):
                 if Contributor.objects.get(Q(project_id=id) &
                                            Q(user_id=content["user_id"])):
                     content = {"detail": "User is already a "
-                               "contributor for the project {id}"}
+                               "contributor for the project {id}."}
                     return Response(data=content,
                                     status=status.HTTP_208_ALREADY_REPORTED)
             except Contributor.DoesNotExist:

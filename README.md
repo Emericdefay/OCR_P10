@@ -29,6 +29,7 @@
   - [Prerequisites](#prerequisites)
   - [Installing](#installing)
   - [Linter](#linter)
+- [Tests <a name = "tests"></a>](#tests-)
 - [🎈 Usage <a name = "usage"></a>](#-usage-)
 - [⛏️ Built Using <a name = "built_using"></a>](#️-built-using-)
 - [Recommandations <a name = "recommandations"></a>](#recommandations-)
@@ -73,6 +74,13 @@ If you want to check the PEP8 from the code :
 
 - From OCR_P10 go to API_SoftDesk `cd API_SoftDesk`
 - run `flake8`
+
+## Tests <a name = "tests"></a>
+
+For potential future updates, tests have been made.<br>
+To launch tests :
+- instead of running server `python API_SoftDesk/manage.py test`
+
 
 ## 🎈 Usage <a name = "usage"></a>
 
