@@ -45,7 +45,7 @@ class CommentCRUD(viewsets.ViewSet):
 
     Generic Error:
         (HTTP status_code | detail)
-        - 401 : jwt_access_token time over
+        - 401 : JWT authentification failed
     """
     permission_classes = (CommentPermissions,)
 
@@ -62,8 +62,8 @@ class CommentCRUD(viewsets.ViewSet):
             - 204 : No comment
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to list
+            - 404 : Element doesn't exist
         """
         # Check if project exist
         try:
@@ -71,7 +71,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check user is contributor
         try:
             Contributor.objects.get(Q(project_id=id) &
@@ -86,7 +86,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         comment = Comment.objects.filter(issue_id=issue_id)
         serialized_comment = CommentSerializer(comment, many=True)
         # Check if comments exist
@@ -114,8 +114,9 @@ class CommentCRUD(viewsets.ViewSet):
             - 201 : created comment
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to create
+            - 404 : Element doesn't exist
         """
         # Check if project exist
         try:
@@ -124,7 +125,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check user is contributor
         try:
             Contributor.objects.get(Q(project_id=id) &
@@ -139,7 +140,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check if content is valid
         try:
             content = dict(request.data.items())
@@ -189,8 +190,8 @@ class CommentCRUD(viewsets.ViewSet):
             - 200 : data retrieve
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to retrieve
+            - 404 : Element doesn't exist
         """
         # Project exist
         try:
@@ -199,7 +200,7 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check user is contributor
         try:
             Contributor.objects.get(Q(project_id=id) &
@@ -214,14 +215,14 @@ class CommentCRUD(viewsets.ViewSet):
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
             content = {"detail": "Comment doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         except Exception:
             content = {"detail": f"Couldn't get the comment {pk}."}
             return Response(data=content,
@@ -248,8 +249,9 @@ class CommentCRUD(viewsets.ViewSet):
             - 200 : data updated
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | invalid form
+            - 400 : Invalid form
             - 403 : Not permission to update
+            - 404 : Element doesn't exist
         """
         try:
             # is contributor to project
@@ -257,21 +259,21 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         try:
             # issue exist
             Issue.objects.get(id=issue_id)
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
             content = {"detail": "Comment doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         except Exception:
             content = {"detail": "Cannot access this comment."}
             return Response(data=content,
@@ -293,7 +295,7 @@ class CommentCRUD(viewsets.ViewSet):
             except Exception:
                 content = {"detail": "Comment does not exist."}
                 return Response(data=content,
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_404_NOT_FOUND)
             # Check if form is valid
             try:
                 comment.update(description=content["description"])
@@ -325,8 +327,8 @@ class CommentCRUD(viewsets.ViewSet):
                     comment_id
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to delete
+            - 404 : Element doesn't exist
         """
         # Check if project exists
         try:
@@ -335,21 +337,21 @@ class CommentCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         try:
             # issue exist
             Issue.objects.get(id=issue_id)
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # get comment if exist
         try:
             comment = Comment.objects.get(id=pk)
         except Comment.DoesNotExist:
             content = {"detail": "Comment doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         except Exception:
             content = {"detail": "You don't have permission to "
                                  "delete this comment."}

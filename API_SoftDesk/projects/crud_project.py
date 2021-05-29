@@ -41,7 +41,7 @@ class ProjectCRUD(viewsets.ViewSet):
 
     Generic Error:
         (HTTP status_code | detail)
-        - 401 : jwt_access_token time over
+        - 401 : JWT authentification failed
     """
     permission_classes = (ProjectPermissions,)
 
@@ -58,7 +58,6 @@ class ProjectCRUD(viewsets.ViewSet):
             - 204 : No project
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
             - 403 : Not permission to list
         """
         # Show all projects
@@ -97,8 +96,9 @@ class ProjectCRUD(viewsets.ViewSet):
             - 200 : retrieved project
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to create
+            - 404 : Element doesn't exist
         """
         # Get one project : id=pk
         try:
@@ -137,9 +137,9 @@ class ProjectCRUD(viewsets.ViewSet):
             - 201 : created project
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to create
-            - 500 : Intern error, shouldn't happen
+            - 500 : Intern error
         """
         try:
             content = dict(request.data.items())
@@ -199,8 +199,9 @@ class ProjectCRUD(viewsets.ViewSet):
             - 200 : updated project
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to update
+            - 404 : Element doesn't exist
         """
         # Check if project exists
         try:
@@ -209,7 +210,7 @@ class ProjectCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # check if user has permission to update this project
         self.check_object_permissions(request, project_updated)
         project = Project.objects.filter(id=pk)
@@ -247,8 +248,8 @@ class ProjectCRUD(viewsets.ViewSet):
                     project_id
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to delete
+            - 404 : Element doesn't exist
             - 417 : Expectation failed
         """
         # Check if project exists
@@ -258,7 +259,7 @@ class ProjectCRUD(viewsets.ViewSet):
         except Exception:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check if user has permission to delete the project
         self.check_object_permissions(request, project_deleted)
         try:

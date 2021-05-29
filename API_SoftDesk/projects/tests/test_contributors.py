@@ -311,7 +311,7 @@ class ContributorTests(APITestCase):
         url = 'http://127.0.0.1:8000/projects/2/users/'
         self.client.force_authenticate(user=user3)
         response = self.client.get(path=url)
-        self.assertEqual(response.content, b'[]')
+        self.assertEqual(response.status_code, 404)
 
     def test_AUT_NCT_rc(self):
         """Test

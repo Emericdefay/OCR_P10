@@ -39,7 +39,7 @@ class IssueCRUD(viewsets.ViewSet):
 
     Generic Error:
         (HTTP status_code | detail)
-        - 401 : jwt_access_token time over
+        - 401 : JWT authentification failed
     """
     permission_classes = (IssuePermissions,)
 
@@ -55,8 +55,8 @@ class IssueCRUD(viewsets.ViewSet):
             - 200 : issue's list
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to list
+            - 404 : Element doesn't exist
         """
         # Check if project exist
         try:
@@ -64,7 +64,7 @@ class IssueCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check user is contributor
         try:
             Contributor.objects.get(Q(project_id=id) &
@@ -74,12 +74,7 @@ class IssueCRUD(viewsets.ViewSet):
             return Response(data=content,
                             status=status.HTTP_403_FORBIDDEN)
         # List issues
-        try:
-            issues = Issue.objects.filter(project_id=id)
-        except Exception as e:
-            content = {"detail": f"{e}"}
-            return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+        issues = Issue.objects.filter(project_id=id)
         serialized_issues = IssueSerializer(issues, many=True)
         return Response(data=serialized_issues.data,
                         status=status.HTTP_200_OK)
@@ -104,8 +99,9 @@ class IssueCRUD(viewsets.ViewSet):
             - 201 : created issue
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to create
+            - 404 : Element doesn't exist
         """
         # Check if project exist
         try:
@@ -113,6 +109,8 @@ class IssueCRUD(viewsets.ViewSet):
             Project.objects.get(id=id)
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_404_NOT_FOUND)
 
         # Check user is contributor
         try:
@@ -193,8 +191,9 @@ class IssueCRUD(viewsets.ViewSet):
             - 200 : updated issue
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist | Invalid form
+            - 400 : Invalid form
             - 403 : Not permission to update
+            - 404 : Element doesn't exist
         """
         # Check if project exist
         try:
@@ -203,14 +202,14 @@ class IssueCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check if issue exist
         try:
             issue = Issue.objects.get(id=pk)
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check permissions issue
         self.check_object_permissions(request, issue)
         # Check if content is a valid form
@@ -252,8 +251,8 @@ class IssueCRUD(viewsets.ViewSet):
                     issue_id
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to delete
+            - 404 : Element doesn't exist
             - 500 : Delete failed
         """
         # Check if project exist
@@ -263,7 +262,7 @@ class IssueCRUD(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check if issue exist
         try:
             issue = Issue.objects.get(
@@ -272,7 +271,7 @@ class IssueCRUD(viewsets.ViewSet):
         except Issue.DoesNotExist:
             content = {"detail": "Issue doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check permissions issue
         self.check_object_permissions(request, issue)
         try:

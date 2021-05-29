@@ -40,7 +40,7 @@ class UserTHROUGH(viewsets.ViewSet):
 
     Generic Error:
         (HTTP status_code | detail)
-        - 401 : jwt_access_token time over
+        - 401 : JWT authentification failed
     """
     permission_classes = (ContributorPermissions,)
 
@@ -57,15 +57,16 @@ class UserTHROUGH(viewsets.ViewSet):
             - 200 : contributors' list
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
             - 403 : Not permission to list
-            - 404 : Error no contributor found
+            - 404 : Error no element found
         """
         # Check if contributor
         try:
             Project.objects.get(id=id)
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
+            return Response(data=content,
+                            status=status.HTTP_404_NOT_FOUND)
         # Should always get one contributor : the author.
         try:
             contributors = Contributor.objects.filter(project_id=id)
@@ -96,8 +97,9 @@ class UserTHROUGH(viewsets.ViewSet):
             - 208 : Already a contributor
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
+            - 400 : Invalid form
             - 403 : Not permission to create
+            - 404 : Element doesn't exist
         """
         # Check if creator is author
         try:
@@ -141,7 +143,7 @@ class UserTHROUGH(viewsets.ViewSet):
             except User.DoesNotExist:
                 content = {"detail": "User doesn't exist."}
                 return Response(data=content,
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_404_NOT_FOUND)
             except Exception:
                 content = {"detail": "You do not have permission "
                                      "to add contributors."}
@@ -171,9 +173,8 @@ class UserTHROUGH(viewsets.ViewSet):
                     user_id
         Errors :
             (HTTP status_code | detail)
-            - 400 : Element doesn't exist
-            - 401 : Unauthorize to delete an author
             - 403 : Not permission to delete
+            - 404 : Element doesn't exist
         """
         # Check if author try to delete him self from contrib's list.
         if pk == request.user.id:
@@ -188,7 +189,7 @@ class UserTHROUGH(viewsets.ViewSet):
         except Project.DoesNotExist:
             content = {"detail": "Project doesn't exist."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_404_NOT_FOUND)
         # Check if the delete request really concern a project's contributor.
         try:
             contributor = Contributor.objects.get(Q(user_id=pk) &
@@ -197,14 +198,14 @@ class UserTHROUGH(viewsets.ViewSet):
             content = {"detail": f"User {pk} is not a contributor "
                                  f"for projet {id}."}
             return Response(data=content,
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_403_FORBIDDEN)
         # Check if the user targetted has same right that the author.
         serialized_contributor = ContributorSerializer(contributor)
         if serialized_contributor.data["permission"] == "1":
             content = {"detail": "You cannot delete a contributor "
                                  "that own it."}
             return Response(data=content,
-                            status=status.HTTP_401_UNAUTHORIZED)
+                            status=status.HTTP_403_FORBIDDEN)
         # Check if user has permission to delete contributor.
         self.check_object_permissions(request, contributor)
         # Delete process.

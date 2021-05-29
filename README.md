@@ -91,6 +91,7 @@ To launch tests :
 - [Python](https://www.python.org/) - Programming language
 - [Django](https://www.djangoproject.com/) - Website Framework
 - [Django REST Framework](https://www.django-rest-framework.org/) - REST Framework for Django
+- [Django REST Framework simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/index.html) - JWT Authentification backend for Django REST Framework
 - [SQLite3](https://www.sqlite.org/index.html) - Database
 
 ## Recommandations <a name = "recommandations"></a>

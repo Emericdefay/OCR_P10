@@ -24,7 +24,7 @@ class ProjectTests(APITestCase):
                 - update project (up)
                 - delete project (dp)
             No contributors test: (NCT)
-                - list projects (lp)
+                + list projects (lp)
                 - retrieve project (rp)
                 - update project (up)
                 - delete project (dp)
@@ -35,6 +35,7 @@ class ProjectTests(APITestCase):
             - update project (up)
             - delete project (dp)
     """
+
     def setUp(self):
         """Setup
             - first user
@@ -284,7 +285,7 @@ class ProjectTests(APITestCase):
         """Test
         Authenticated user /
             No contributor Test /
-                - list project
+                + list project
         Attempt : 204
         """
         user = User.objects.get(username='user1')
