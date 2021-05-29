@@ -10,82 +10,7 @@
 			"name": "Project management",
 			"item": [
 				{
-					"name": "create new project",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"console.log(response.id)\r",
-									"if (response.id)\r",
-									"{\r",
-									"    let list_foo = [];\r",
-									"\r",
-									"    if (pm.globals.get(\"list_projects\"))\r",
-									"    {\r",
-									"        list_foo = pm.globals.get(\"list_projects\");\r",
-									"    }\r",
-									"\r",
-									"    list_foo.push(response.id);\r",
-									"    pm.globals.set(\"list_projects\", list_foo);\r",
-									"};"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_access_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "title",
-									"value": "first real project",
-									"description": "\"",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "comment",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "urgfzeezf",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/projects/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"projects",
-								""
-							]
-						},
-						"description": "POST request<br>\nMethod create<br>\n\nCreate a new projet. Need to be connected to create one.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>description</li>\n    <li>type</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>201 : created project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>500 : Intern error</li>\n</ul>"
-					},
-					"response": []
-				},
-				{
-					"name": "view secured projects",
+					"name": "list projects",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -117,12 +42,12 @@
 								""
 							]
 						},
-						"description": "GET request<br>\nMethod list<br>\n\nShow all projects linked to the authenticated user\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : list project</li>\n    <li>204 : No project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+						"description": "GET request<br>\nMethod list<br>\n\nShow all projects linked to the authenticated user\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : List project</li>\n    <li>204 : No project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n</ul>"
 					},
 					"response": []
 				},
 				{
-					"name": "view secured project id=",
+					"name": "retrieve project",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -164,7 +89,82 @@
 								""
 							]
 						},
-						"description": "GET request<br>\nMethod retrieve<br>\n\nGet a specific project for the authenticated user.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : retrieved project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to retrieve</li>\n</ul>"
+						"description": "GET request<br>\nMethod retrieve<br>\n\nGet a specific project for the authenticated user.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Retrieved project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to retrieve</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "create project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Project n1",
+									"description": "\"",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Very important project that'll run the world",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "back-end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nCreate a new projet. Need to be connected to create one.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>description</li>\n    <li>type</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>201 : Created project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>500 : Intern error</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -184,12 +184,17 @@
 							"formdata": [
 								{
 									"key": "type",
-									"value": "aaaz",
+									"value": "Android",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "dz",
+									"value": "Ok it'll not run the world",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Project n1_A",
 									"type": "text"
 								}
 							]
@@ -210,7 +215,7 @@
 								""
 							]
 						},
-						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own project to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>(title)</li>\n    <li>(description)</li>\n    <li>(type)</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own project to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>(title)</li>\n    <li>(description)</li>\n    <li>(type)</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Updated project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to update</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -266,12 +271,12 @@
 								""
 							]
 						},
-						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own project to destroy it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : project deleted<br>\n              project_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to destroy</li>\n    <li>417 : Expectation failed</li>\n</ul>"
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own project to destroy it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Project deleted<br>\n              project_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to destroy</li>\n    <li>404 : Element doesn't exist</li>\n    <li>417 : Expectation failed</li>\n</ul>"
 					},
 					"response": []
 				}
 			],
-			"description": "Projects management\n\n    Generic argument:\n        - pk (int) : ID of the project\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        AUTHENTICATED :\n            - create\n        Contributor :\n            - list\n            - retrieve\n        Owner :\n            - list\n            - retrieve\n            - update\n            - destroy"
+			"description": "Projects management <a name=\"project\"></a>\n\n    Generic argument:\n        - pk (int) : ID of the project\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        AUTHENTICATED :\n            - create\n        Contributor :\n            - list\n            - retrieve\n        Owner :\n            - list\n            - retrieve\n            - update\n            - destroy\n\n    Generic Error:\n        (HTTP status_code | detail)\n        - 401 : jwt_access_token time over"
 		},
 		{
 			"name": "Issue management",
@@ -304,7 +309,7 @@
 								""
 							]
 						},
-						"description": "GET request<br>\nMethod list\n\nList all issues from a project if user is a contributor\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+						"description": "GET request<br>\nMethod list\n\nList all issues from a project if user is a contributor\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -371,7 +376,7 @@
 								""
 							]
 						},
-						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor of the project to create an issue.\n        \n<p><strong>Form:</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor of the project to create an issue.\n        \n<p><strong>Form:</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -414,7 +419,7 @@
 								""
 							]
 						},
-						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own issue to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own issue to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to update</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -451,16 +456,48 @@
 								""
 							]
 						},
-						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own issue to delete it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : delete details<br>\n    project_id<br>\n    issue_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to delete</li>\n    <li>500 : Delete failed</li>\n</ul>"
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own issue to delete it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Delete details<br>\n    project_id<br>\n    issue_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to delete</li>\n    <li>404 : Element doesn't exist</li>\n    <li>500 : Delete failed</li>\n</ul>"
 					},
 					"response": []
 				}
 			],
-			"description": "Issue management\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the issue\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        Contributor :\n            - list\n            - create\n        Owner :\n            - list\n            - create\n            - update\n            - destroy"
+			"description": "Issue management<a name=\"issue\"></a>\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the issue\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:\n        Contributor :\n            - list\n            - create\n        Owner :\n            - list\n            - create\n            - update\n            - destroy\n\n    Generic Error:\n        (HTTP status_code | detail)\n        - 401 : jwt_access_token time over"
 		},
 		{
 			"name": "Users management",
 			"item": [
+				{
+					"name": "list contributors from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"users",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nList all contributor for the project.<br>\nNeed to be one of them to get the list.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Error no contributor found</li>\n</ul>"
+					},
+					"response": []
+				},
 				{
 					"name": "add contributor to project",
 					"request": {
@@ -504,7 +541,7 @@
 								""
 							]
 						},
-						"description": "POST request<br>\nMethod create<br>\n\nAdd a contributor to the project that user own.<br>\nNeed to be the author to add a contributor.\n\n<p><strong>Form:</strong></p>\n<ul>\n    <li>user_id</li>\n    <li>role</li>\n</ul>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : contributor created</li>\n    <li>208 : Already a contributor</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+						"description": "POST request<br>\nMethod create<br>\n\nAdd a contributor to the project that user own.<br>\nNeed to be the author to add a contributor.\n\n<p><strong>Form:</strong></p>\n<ul>\n    <li>user_id</li>\n    <li>role</li>\n</ul>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : Contributor created</li>\n    <li>208 : Already a contributor</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -537,44 +574,12 @@
 								""
 							]
 						},
-						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own the project to delete contibutors.<br>\nCannot delete the owner from contributors\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : deleted confirmation<br>\n              project_id<br>\n              user_id<br></li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>401 : Unauthorize to delete an author</li>\n    <li>403 : Not permission to delete</li>\n</ul>"
-					},
-					"response": []
-				},
-				{
-					"name": "list contributors from project",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_access_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/users/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"projects",
-								"{{project_id}}",
-								"users",
-								""
-							]
-						},
-						"description": "GET request<br>\nMethod list<br>\n\nList all contributor for the project.<br>\nNeed to be one of them to get the list.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to list</li>\n    <li>404 : Error no contributor found</li>\n</ul>"
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own the project to delete contibutors.<br>\nCannot delete the owner from contributors\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Deleted confirmation<br>\n              project_id<br>\n              user_id<br></li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to delete</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				}
 			],
-			"description": "Contributor management\n\n    Bridge between models : Project | User\n        \n        model table : through\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the contributor\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - DELETE : delete\n\n    Permissions:\n        Contributor : (Project | User)\n            - list\n        Owner : (Project | User)\n            - list\n            - create\n            - destroy"
+			"description": "Contributor management<a name=\"user\"></a>\n\n    Bridge between models : Project | User\n        \n        model table : through\n\n    Generic arguments:\n        - id (int) : ID of the project\n        - pk (int) : ID of the contributor\n\n    Methods:\n        - GET    : list\n        - POST   : create\n        - DELETE : delete\n\n    Permissions:\n        Contributor : (Project | User)\n            - list\n        Owner : (Project | User)\n            - list\n            - create\n            - destroy\n\n    Generic Error:\n        (HTTP status_code | detail)\n        - 401 : jwt_access_token time over"
 		},
 		{
 			"name": "Comments management",
@@ -609,7 +614,42 @@
 								""
 							]
 						},
-						"description": "GET request<br>\nMethod list<br>\n\nNeed to be a contributor to list comments.<br>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li>200 : comments' list</li>\n   <li>204 : No comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to list</li>\n</ul>"
+						"description": "GET request<br>\nMethod list<br>\n\nNeed to be a contributor to list comments.<br>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li>200 : Comments' list</li>\n   <li>204 : No comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve comment from issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/{{comment_id}}/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"{{project_id}}",
+								"issues",
+								"{{issue_id}}",
+								"comments",
+								"{{comment_id}}",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod retrieve<br>\n<br>\nNeed to be a contributor to get a comment.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Data retrieve</li>\n</ul>\n\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to retrieve</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -653,7 +693,7 @@
 								""
 							]
 						},
-						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor to the project<br>\nto create a comment on a existing issue.<br>\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</p></strong>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | Invalid form</li>\n    <li>403 : Not permission to create</li>\n</ul>"
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor to the project<br>\nto create a comment on a existing issue.<br>\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</p></strong>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : Created comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -698,7 +738,7 @@
 								""
 							]
 						},
-						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own the comment to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : data updated</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist | invalid form</li>\n    <li>403 : Not permission to update</li>\n</ul>"
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own the comment to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Data updated</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to update</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				},
@@ -733,47 +773,12 @@
 								""
 							]
 						},
-						"description": "DELETE request<br>\nMethod destroy<br>\n<br>\nNeed to own the comment to destroy it.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li> \n       200 : Successfully delete comment<br>\n           project_id<br>\n           issue_id<br>\n           comment_id<br>\n   </li>\n</ul>\n<p><strong>Errors :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Element doesn't exist</li>\n    <li>403 : Not permission to delete</li>\n</ul>"
-					},
-					"response": []
-				},
-				{
-					"name": "get one comment from issue",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_access_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/{{issue_id}}/comments/{{comment_id}}/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"projects",
-								"{{project_id}}",
-								"issues",
-								"{{issue_id}}",
-								"comments",
-								"{{comment_id}}",
-								""
-							]
-						},
-						"description": "GET request<br>\nMethod retrieve<br>\n<br>\nNeed to be a contributor to get a comment.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n- 200 : data retrieve\n\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n- 400 : Element doesn't exist\n- 403 : Not permission to retrieve"
+						"description": "DELETE request<br>\nMethod destroy<br>\n<br>\nNeed to own the comment to destroy it.<br>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li> \n       200 : Successfully delete comment<br>\n           project_id<br>\n           issue_id<br>\n           comment_id<br>\n   </li>\n</ul>\n<p><strong>Errors :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to delete</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
 					},
 					"response": []
 				}
 			],
-			"description": "Comment management\n\n    Generic arguments:\n        - id (int)       : ID of the project\n        - issue_id (int) : ID of the issue\n        - pk (int)       : ID of the comment\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:    \n        Contributor :\n            - list\n            - retrieve\n            - create\n        Owner :\n            - list\n            - retrieve\n            - create\n            - update\n            - destroy"
+			"description": "Comment management<a name=\"comment\"></a>\n\n    Generic arguments:\n        - id (int)       : ID of the project\n        - issue_id (int) : ID of the issue\n        - pk (int)       : ID of the comment\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:    \n        Contributor :\n            - list\n            - retrieve\n            - create\n        Owner :\n            - list\n            - retrieve\n            - create\n            - update\n            - destroy\n\n    Generic Error:\n        (HTTP status_code | detail)\n        - 401 : jwt_access_token time over"
 		},
 		{
 			"name": "signup a User",
