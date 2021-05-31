@@ -256,7 +256,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/",
+							"raw": "http://127.0.0.1:8000/projects/1/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -267,7 +267,7 @@
 							"port": "8000",
 							"path": [
 								"projects",
-								"{{project_id}}",
+								"1",
 								""
 							]
 						},
@@ -293,7 +293,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/{{project_id}}/issues/",
+							"raw": "http://127.0.0.1:8000/projects/1/issues/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -304,7 +304,7 @@
 							"port": "8000",
 							"path": [
 								"projects",
-								"{{project_id}}",
+								"1",
 								"issues",
 								""
 							]
@@ -781,6 +781,1396 @@
 			"description": "Comment management<a name=\"comment\"></a>\n\n    Generic arguments:\n        - id (int)       : ID of the project\n        - issue_id (int) : ID of the issue\n        - pk (int)       : ID of the comment\n\n    Methods:\n        - GET    : list\n        - GET    : retrieve\n        - POST   : create\n        - PUT    : update\n        - DELETE : delete\n\n    Permissions:    \n        Contributor :\n            - list\n            - retrieve\n            - create\n        Owner :\n            - list\n            - retrieve\n            - create\n            - update\n            - destroy\n\n    Generic Error:\n        (HTTP status_code | detail)\n        - 401 : jwt_access_token time over"
 		},
 		{
+			"name": "Exemple user story",
+			"item": [
+				{
+					"name": "signup user1 AA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "user1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/signup/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to create an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>first_name</li>\n  <li>last_name</li>\n  <li>email</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "signup user2 AC",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "user2",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "user2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/signup/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to create an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>first_name</li>\n  <li>last_name</li>\n  <li>email</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "signup user3 AnC",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "user3",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user3@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "user3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/signup/",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to create an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>first_name</li>\n  <li>last_name</li>\n  <li>email</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user1 AA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA create project 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Project n1",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Very important project that'll run the world",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "back-end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nCreate a new projet. Need to be connected to create one.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>description</li>\n    <li>type</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>201 : Created project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>500 : Intern error</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "user1 make user2 Contrib",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "role",
+									"value": "testeur",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"users",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nAdd a contributor to the project that user own.<br>\nNeed to be the author to add a contributor.\n\n<p><strong>Form:</strong></p>\n<ul>\n    <li>user_id</li>\n    <li>role</li>\n</ul>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : Contributor created</li>\n    <li>208 : Already a contributor</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user2 AC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user2",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AC create issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "problem n1",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "this is a big problem",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "urgent",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "not done yet",
+									"type": "text"
+								},
+								{
+									"key": "assignee_user_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor of the project to create an issue.\n        \n<p><strong>Form:</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : created issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user1 AA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA create comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "commentary extremely relevant",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								"comments",
+								""
+							]
+						},
+						"description": "POST request<br>\nMethod create<br>\n\nNeed to be a contributor to the project<br>\nto create a comment on a existing issue.<br>\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</p></strong>\n(HTTP status_code | detail)\n<ul>\n    <li>201 : Created comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to create</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA update comment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Commentary more important than before",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/comments/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								"comments",
+								"1",
+								""
+							]
+						},
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own the comment to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>description</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Data updated</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to update</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user2 AC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user2",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AC list comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								"comments",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nNeed to be a contributor to list comments.<br>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li>200 : Comments' list</li>\n   <li>204 : No comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AC update issue",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "desc",
+									"value": "The issue is really hard. Let's start simple.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								""
+							]
+						},
+						"description": "PUT request<br>\nMethod update<br>\n\nNeed to own issue to update it.\n\n<p><strong>Form :</strong></p>\n<ul>\n    <li>title</li>\n    <li>desc</li>\n    <li>tag</li>\n    <li>priority</li>\n    <li>status</li>\n    <li>assignee_user_id</li>\n</ul>\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : updated issue</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to update</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user1 AA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA list issues from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list\n\nList all issues from a project if user is a contributor\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user3 AnC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user3",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AnC list projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nShow all projects linked to the authenticated user\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : List project</li>\n    <li>204 : No project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AnC try retrieve project",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod retrieve<br>\n\nGet a specific project for the authenticated user.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Retrieved project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>400 : Invalid form</li>\n    <li>403 : Not permission to retrieve</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AnC try delete project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own project to destroy it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Project deleted<br>\n              project_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to destroy</li>\n    <li>404 : Element doesn't exist</li>\n    <li>417 : Expectation failed</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user2 AC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user2",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AC try delete project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.log(response.id)\r",
+									"if (response.id)\r",
+									"{\r",
+									"    let list_foo = [];\r",
+									"\r",
+									"    if (pm.globals.get(\"list_projects\"))\r",
+									"    {\r",
+									"        list_foo = pm.globals.get(\"list_projects\");\r",
+									"    }\r",
+									"\r",
+									"\r",
+									"    list_foo.push(response.id);\r",
+									"    pm.globals.set(\"list_projects\", list_foo);\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own project to destroy it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Project deleted<br>\n              project_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to destroy</li>\n    <li>404 : Element doesn't exist</li>\n    <li>417 : Expectation failed</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AC delete issue",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								""
+							]
+						},
+						"description": "DELETE request<br>\nMethod destroy<br>\n\nNeed to own issue to delete it.\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : Delete details<br>\n    project_id<br>\n    issue_id</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to delete</li>\n    <li>404 : Element doesn't exist</li>\n    <li>500 : Delete failed</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "auth user1 AA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"if (response.access)\r",
+									"{\r",
+									"    pm.globals.set(\"jwt_access_token\", response.access);\r",
+									"};\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"jwt_refresh_token\", response.refresh);\r",
+									"\r",
+									"pm.test(\"Status test\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Motdepasse123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "POST request<br>\nmethod post<br>\n<br>\nNo permission required to authenticate an user.<br>\n<p><strong>Form :</strong></p>\n<ul>\n  <li>username</li>\n  <li>password</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA try list comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/1/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								"1",
+								"comments",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nNeed to be a contributor to list comments.<br>\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n   <li>200 : Comments' list</li>\n   <li>204 : No comment</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA list issues from project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/1/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"1",
+								"issues",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list\n\nList all issues from a project if user is a contributor\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>200 : Issue's list</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n    <li>404 : Element doesn't exist</li>\n</ul>"
+					},
+					"response": []
+				},
+				{
+					"name": "AA list projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "GET request<br>\nMethod list<br>\n\nShow all projects linked to the authenticated user\n\n<p><strong>Validate :</strong></p>\n(HTTP status_code | detail)\n<ul>    \n    <li>200 : List project</li>\n    <li>204 : No project</li>\n</ul>\n<p><strong>Errors : </strong></p>\n(HTTP status_code | detail)\n<ul>\n    <li>403 : Not permission to list</li>\n</ul>"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "signup a User",
 			"request": {
 				"method": "POST",
@@ -790,7 +2180,7 @@
 					"formdata": [
 						{
 							"key": "first_name",
-							"value": "user2",
+							"value": "user1",
 							"type": "text"
 						},
 						{
@@ -810,7 +2200,7 @@
 						},
 						{
 							"key": "username",
-							"value": "user2",
+							"value": "user1",
 							"type": "text"
 						}
 					]

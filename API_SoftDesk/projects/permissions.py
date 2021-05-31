@@ -145,8 +145,7 @@ class IssuePermissions(permissions.BasePermission):
         elif view.action in ["update", "destroy"]:
             # User can update, destroy element if user_created_it
             project = Project.objects.get(id=obj.project_id.id)
-            return project in Project.objects.filter(
-                                            author_user_id=request.user.id)
+            return obj.author_user_id == request.user
         else:
             return False
 
